@@ -42,6 +42,27 @@ public class node_data implements NodeData, Serializable {
         locateNode = location;
     }
 
+    public static double getMaxX() {
+        return maxX;
+    }
+
+    public static double getMaxY() {
+        return maxY;
+    }
+
+    public static double getMinY() {
+        return minY;
+    }
+
+    public static double getMinX() {
+        return minX;
+    }
+
+    public static int getNodeID() {
+        return nodeID;
+    }
+
+
     @Override
     public int getKey() {
         return this.id;
@@ -49,41 +70,41 @@ public class node_data implements NodeData, Serializable {
 
     @Override
     public GeoLocation getLocation() {
-        return this.lo
+        return this.locateNode;
     }
 
     @Override
     public double getWeight() {
-        return 0;
+        return this.nodeWeight;
     }
 
     @Override
     public void setWeight(double w) {
-
+        this.nodeWeight = w;
     }
 
     @Override
     public String getInfo() {
-        return null;
+        return nodeInfo;
     }
 
     @Override
     public void setInfo(String s) {
-
+        this.nodeInfo = s;
     }
 
     @Override
     public int getTag() {
-        return 0;
+        return this.nodeTag;
     }
 
     @Override
     public void setTag(int t) {
-
+        this.nodeTag = t;
     }
 
     @Override
     public void setLocation(GeoLocation p) {
-
+        this.locateNode = p;
     }
 }
