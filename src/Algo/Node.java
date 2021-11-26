@@ -7,21 +7,23 @@ import java.util.LinkedHashMap;
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
-import utils.Point3D;
 
-public class node_data implements NodeData, Serializable {
+public class Node implements NodeData, Serializable {
 
     private static int nodeID = 0;
     private int id;
-    private GeoLocation locateNode = null;
+    private Location locateNode;
     private double nodeWeight = 0;
     private String nodeInfo = "";
     private int nodeTag = -1;
     private HashMap<Integer, EdgeData> Map = new LinkedHashMap<>();
     private static double maxX = 10, maxY = 10, minY = -10, minX = -10;
 
-            //////// Constructor ////////
-    public node_data(GeoLocation location){
+    /**
+     * Constructor only for given location
+     * @param location
+     */
+    public Node(Location location){
         maxX = Math.max(location.x(), maxX);
         minX = Math.min(location.y(), minX);
         maxY = Math.max(location.y(), maxY);
@@ -31,7 +33,12 @@ public class node_data implements NodeData, Serializable {
         locateNode = location;
     }
 
-    public node_data(int id,GeoLocation location) {
+    /**
+     * Constructor for id and given location
+     * @param id
+     * @param location
+     */
+    public Node(int id, Location location) {
         maxX = Math.max(location.x(), maxX);
         maxY = Math.max(location.y(), maxY);
         minX = Math.min(location.x(), minX);
@@ -40,6 +47,35 @@ public class node_data implements NodeData, Serializable {
         if (nodeID <= this.getKey())
             nodeID = this.getKey() + 1;
         locateNode = location;
+    }
+
+    /**
+     * Empty Constructor
+     */
+    public Node(){
+        this.locateNode = new Location();
+        this.nodeTag = 0;
+        this.nodeInfo = "";
+        this.nodeID = 0;
+    }
+
+    /**
+     * Copy Constructor
+     * @param other
+     */
+    public Node(NodeData other){
+        this.id = other.getKey();
+        if (nodeID <= other.getKey()){
+            nodeID = other.getKey() + 1;
+        }
+        locateNode = new Location(other.getLocation().x(), other.getLocation().y(), other.getLocation().z());
+        maxX = Math.max(locateNode.x(), maxX);
+        minX = Math.min(locateNode.x(), minX);
+        maxY = Math.max(locateNode.y(), maxY);
+        minY = Math.min(locateNode.y(), minY);
+        nodeWeight = other.getWeight();
+        nodeInfo = other.getInfo();
+        nodeTag = other.getTag();
     }
 
     public static double getMaxX() {
@@ -103,8 +139,22 @@ public class node_data implements NodeData, Serializable {
         this.nodeTag = t;
     }
 
+    public static int setNodeID(int nodeID){
+        return nodeID;
+    }
+
+    public String toString(){
+        return "Node (" + "location=" + locateNode + ",nodeID=" + nodeID + ",nodeTag=" + nodeTag + ",nodeInfo" + nodeInfo + ")";
+    }
+
+    /**
+     * Setting the new location
+     * @param p - new new location  (position) of this node.
+     */
     @Override
     public void setLocation(GeoLocation p) {
-        this.locateNode = p;
+        this.locateNode.setY(p.y());
+        this.locateNode.setX(p.x());
+        this.locateNode.setZ(p.z());
     }
 }
