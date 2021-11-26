@@ -28,10 +28,7 @@ public class Edata implements EdgeData {
     @Override
     public int getSrc() {
         return this.Src;
-        if (Src<0) throw new RuntimeException("ERR: weight cant be negetive");
-        if (Src==0) throw new RuntimeException("ERR: the destination can't be equals to the source ");
-        if (Src<0) throw new RuntimeException("ERR: weight cant be negetive");
-        if (Src<0) throw new RuntimeException("ERR: weight cant be negetive");
+
     }
 
     @Override
