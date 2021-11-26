@@ -11,6 +11,7 @@ public interface EdgeData {
 	 * @return
 	 */
 	public int getSrc();
+
 	/**
 	 * The id of the destination node of this edge
 	 * @return

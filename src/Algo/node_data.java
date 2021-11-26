@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
-import utils.Point3D;
+
 
 public class node_data implements NodeData, Serializable {
 
@@ -49,7 +49,7 @@ public class node_data implements NodeData, Serializable {
 
     @Override
     public GeoLocation getLocation() {
-        return this.lo
+        return this.locateNode;
     }
 
     @Override
