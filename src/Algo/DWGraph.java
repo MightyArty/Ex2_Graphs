@@ -4,6 +4,7 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -22,6 +23,18 @@ public class DWGraph implements DirectedWeightedGraph {
     // need to delete in the end
     // need to delete in the end
 
+    /**
+     * Empty Constructor
+     */
+    public DWGraph(){}
+
+    /**
+     * Copy Constructor
+     * @param graph
+     */
+    public DWGraph(DirectedWeightedGraph graph){
+        // need to work !!
+    }
 
     @Override
     public NodeData getNode(int key) {
