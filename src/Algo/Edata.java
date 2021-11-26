@@ -9,16 +9,18 @@ public class Edata implements EdgeData {
 
     /**
      * copy contractor
+     *
      * @param e
      */
-    public Edata(edge_data e){
+    public Edata(EdgeData e) {
         this.Dest = e.getDest();
         this.Src = e.getSrc();
         this.Weight = e.getWeight();
     }
-    public Edata(int src,int dest, double weight){
-        if (weight<0) throw new RuntimeException("ERR: weight cant be negetive");
-        if (src==dest) throw new RuntimeException("ERR: the destination can't be equals to the source ");
+
+    public Edata(int src, int dest, double weight) {
+        if (weight < 0) throw new RuntimeException("ERR: weight cant be negetive");
+        if (src == dest) throw new RuntimeException("ERR: the destination can't be equals to the source ");
         this.Dest = dest;
         this.Src = src;
         this.Weight = weight;
@@ -33,31 +35,31 @@ public class Edata implements EdgeData {
 
     @Override
     public int getDest() {
-        return 0;
+        return this.Dest;
     }
 
     @Override
     public double getWeight() {
-        return 0;
+        return this.getWeight();
     }
 
     @Override
     public String getInfo() {
-        return null;
+        return this.info;
     }
 
     @Override
     public void setInfo(String s) {
-
+        this.info=s;
     }
 
     @Override
     public int getTag() {
-        return 0;
+        return tag;
     }
 
     @Override
     public void setTag(int t) {
-
+        this.tag=t;
     }
 }
