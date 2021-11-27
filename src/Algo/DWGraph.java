@@ -13,9 +13,21 @@ public class DWGraph implements DirectedWeightedGraph {
     private int edgeSize;
     private int mc;
 
+    /**
+     * Copy Constructor
+     */
+    public DWGraph(){
+        this.graph = new HashMap<>();
+        this.edges = new HashMap<>();
+        this.againstDirection = new HashMap<>();
+        this.edgeSize = 0;
+        this.mc = 0;
+    }
 
     @Override
     public NodeData getNode(int key) {
+        if(this.graph.containsKey(key))
+            return this.graph.get(key);
         return null;
     }
 
