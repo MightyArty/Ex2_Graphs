@@ -19,12 +19,22 @@ public class Location implements GeoLocation {
     }
 
     /**
-     * Copy constructor
+     * Another Constructor
      */
     public Location(){
         this.x = 0;
         this.y = 0;
         this.z = 0;
+    }
+
+    /**
+     * Copy Constructor
+     * @param other
+     */
+    public Location(GeoLocation other){
+        this.x = other.x();
+        this.y = other.y();
+        this.z = other.z();
     }
 
     @Override

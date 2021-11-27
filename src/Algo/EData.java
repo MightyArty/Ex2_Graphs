@@ -24,12 +24,12 @@ public class EData implements EdgeData {
 
     /**
      * Copy Constructor
-     * @param e
+     * @param other
      */
-    public EData(EdgeData e) {
-        this.Dest = e.getDest();
-        this.Src = e.getSrc();
-        this.Weight = e.getWeight();
+    public EData(EdgeData other) {
+        this.Dest = other.getDest();
+        this.Src = other.getSrc();
+        this.Weight = other.getWeight();
     }
 
     @Override
