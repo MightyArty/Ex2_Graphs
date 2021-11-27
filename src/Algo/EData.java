@@ -9,10 +9,10 @@ public class EData implements EdgeData {
     private String info;
 
     /**
-     * Constructor
-     * @param src
-     * @param dest
-     * @param weight
+     * Connecting the src to dest
+     * @param src - given source
+     * @param dest - given destination
+     * @param weight - given weight
      */
     public EData(int src, int dest, double weight) {
         if (weight < 0) throw new RuntimeException("ERR: weight cant be negative");
