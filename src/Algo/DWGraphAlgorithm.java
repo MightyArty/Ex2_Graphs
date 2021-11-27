@@ -75,10 +75,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         path.get(src).add(src);
         int j = 0;
 
-        while (j <= myGraph.nodeSize() || !Qnode.isEmpty()){
-
-        }
-
     }
 
     @Override
