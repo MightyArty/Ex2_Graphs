@@ -20,6 +20,8 @@ public class EData implements EdgeData {
         this.Dest = dest;
         this.Src = src;
         this.Weight = weight;
+        this.info = null;
+        this.tag = -1000000000; // just for setup
     }
 
     /**
@@ -30,6 +32,7 @@ public class EData implements EdgeData {
         this.Dest = other.getDest();
         this.Src = other.getSrc();
         this.Weight = other.getWeight();
+        this.tag = -1000000000; // just for setup
     }
 
     @Override
@@ -51,6 +54,11 @@ public class EData implements EdgeData {
     @Override
     public String getInfo() {
         return this.info;
+    }
+
+    @Override
+    public String toString(){
+        return "EData{" + "source=" + this.Src + ",destination=" + this.Dest + ",weight=" + this.Weight + ",info=" + this.info + "and the tag=" + this.tag + "}";
     }
 
     @Override

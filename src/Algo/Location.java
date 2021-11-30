@@ -1,6 +1,13 @@
 package Algo;
 
 import api.GeoLocation;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 
 public class Location implements GeoLocation {
 
@@ -8,9 +15,9 @@ public class Location implements GeoLocation {
 
     /**
      * Constructor
-     * @param x
-     * @param y
-     * @param z
+     * @param x (x,0,0)
+     * @param y (0,y,0)
+     * @param z (0,0,z)
      */
     public Location(double x, double y, double z){
         this.x = x;
