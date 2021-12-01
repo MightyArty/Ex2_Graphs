@@ -1,11 +1,11 @@
 package Algo;
 
 import api.GeoLocation;
-
+import com.google.gson.Gson;
 public class Location implements GeoLocation {
 
     private double x,y,z;
-
+    Gson g=new Gson();
     /**
      * Constructor
      * @param x
