@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import api.EdgeData;
 import api.GeoLocation;
@@ -19,66 +20,42 @@ public class Node implements NodeData, Serializable {
     private String info;
     private Location location;
     private Color current = Color.WHITE;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
-    private HashMap<Integer, EdgeData> fromSRC; //hash map representing the start of path
-    private HashMap<Integer, EdgeData> toDEST;  //hash map representing the end of path
+    private Map<Integer, EdgeData> fromSRC; //hash map representing the start of path
+    private Map<Integer, EdgeData> toDEST;  //hash map representing the end of path
 
     /**
-     * Main Constructor
-     * @param key
-     * @param tag
-     * @param weight
-     * @param info
-     * @param location
+     * Class constructor
+     * @param node
      */
-    public Node(int key, int tag, double weight, String info, Location location){
-        this.key = key;
-        this.tag = tag;
-        this.weight = weight;
-        if(info == null)
-            this.info = new String();
-        else this.info = info;
-        if(location == null)
-            this.location = new Location();
-        else this.location = location;
-    }
-
-    /**
-     * Constructor for key and given location
-     * @param key
-     * @param location
-     */
-    public Node(int key, Location location) {
-        this.key = key;
-        if(location == null) return;
-        this.location = location;
-        this.fromSRC = new HashMap<>();
-        this.toDEST = new HashMap<>();
-    }
-
-    /**
-     * Empty Constructor
-     */
-    public Node(){
-        this.key = keys++;
-        this.location = new Location();
-        this.weight = 0;
+    public Node(NodeData node){
+        this.key = node.getKey();
+        this.location = new Location(node.getLocation().x(), node.getLocation().y(), node.getLocation().z());
+        this.weight = node.getWeight();
         this.tag = 0;
-        this.info = "";
+        this.info = node.getInfo();
+        this.fromSRC = new HashMap<>();
+        this.toDEST = new HashMap<>();
     }
 
     /**
-     * Copy Constructor
-     * @param other
+     * Constructor for given key and location
+     * @param key
+     * @param loc
      */
-    public Node(NodeData other){
-        if (other == null) return;
-        this.key = other.getKey();
-        this.location = new Location(other.getLocation());
-        this.weight = other.getWeight();
-        this.tag = other.getTag();
-        this.info = new String(other.getInfo());
+    public Node(int key, String loc) {
+        this.key = key;
+        this.weight = 0;
+        this.info = "";
+        this.tag = 0;
         this.fromSRC = new HashMap<>();
         this.toDEST = new HashMap<>();
+
+        String[] locArr = loc.split(",");
+        double x = Double.parseDouble(locArr[0]); // x coordinate
+        double y = Double.parseDouble(locArr[1]); // y coordinate
+        double z = Double.parseDouble(locArr[2]); // z coordinate
+
+        this.location = new Location(x,y,z);
     }
 
     @Override
@@ -140,24 +117,6 @@ public class Node implements NodeData, Serializable {
     }
 
     /**
-     * return the src
-     * @param key
-     * @return
-     */
-    public EdgeData getFromSRC(int key){
-        return fromSRC.get(key);
-    }
-
-    /**
-     * return the dest
-     * @param key
-     * @return
-     */
-    public EdgeData getFromDEST(int key){
-        return toDEST.get(key);
-    }
-
-    /**
      * Iterator for fromSRC map
      * @return
      */
@@ -171,6 +130,18 @@ public class Node implements NodeData, Serializable {
      */
     public Iterator<EdgeData> getToDESTIter(){
         return toDEST.values().iterator();
+    }
+
+    public static int getKeys() {
+        return keys;
+    }
+
+    public Map<Integer, EdgeData> getFromSRC() {
+        return fromSRC;
+    }
+
+    public Map<Integer, EdgeData> getToDEST() {
+        return toDEST;
     }
 
     /**

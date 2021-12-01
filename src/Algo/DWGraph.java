@@ -3,7 +3,12 @@ package Algo;
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
-
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class DWGraph implements DirectedWeightedGraph {
@@ -12,8 +17,43 @@ public class DWGraph implements DirectedWeightedGraph {
     private int edgeSize;
     private int mc;
 
+    public DWGraph(DirectedWeightedGraph graph){
+        nodes = new HashMap<>();
+        edges = new HashMap<>();
+    }
+
     /**
-     * Copy Constructor
+     * Getting the data from json file
+     * @param json_file
+     */
+    public DWGraph(String json_file) {
+        nodes = new HashMap<>();
+        edges = new HashMap<>();
+
+        JSONObject json = new JSONObject();
+        try {
+            json = parseJSON(json_file);
+        }
+        catch (IOException exception){
+            exception.printStackTrace();
+        }
+        // puling the edges from json file
+        JSONArray edges = json.getJSONArray("Edges");
+        for (int i = 0; i < edges.length(); i++) {
+            // puling the dest
+            int dest = edges.getJSONObject(i).getInt("dest");
+            // puling the src
+            int src = edges.getJSONObject(i).getInt("src");
+            // puling the weight of the edge
+            int weight = edges.getJSONObject(i).getInt("w");
+            EData edge = new EData(src,dest,weight);
+
+            // NEED TO PUSH THE DATA TO THE SRC MAP AND DEST MAP !!!
+        }
+    }
+
+    /**
+     * Empty Constructor
      */
     public DWGraph(){
         this.nodes = new HashMap<>();  // new node map
@@ -165,5 +205,10 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public int getMC() {
         return this.mc;
+    }
+
+    private static JSONObject parseJSON(String json_file) throws JSONException, IOException{
+        String out = new String(Files.readAllBytes(Paths.get(json_file)));
+        return new JSONObject(out);
     }
 }
