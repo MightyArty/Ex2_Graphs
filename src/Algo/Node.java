@@ -3,6 +3,7 @@ package Algo;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import api.EdgeData;
@@ -154,6 +155,40 @@ public class Node implements NodeData, Serializable {
      */
     public EdgeData getFromDEST(int key){
         return toDEST.get(key);
+    }
+
+    /**
+     * Iterator for fromSRC map
+     * @return
+     */
+    public Iterator<EdgeData> getFromSRCIter(){
+        return fromSRC.values().iterator();
+    }
+
+    /**
+     * Iterator for toDEST map
+     * @return
+     */
+    public Iterator<EdgeData> getToDESTIter(){
+        return toDEST.values().iterator();
+    }
+
+    /**
+     * Method to remove given key from src map
+     * @param key
+     * @return
+     */
+    public EdgeData removeSRC(int key){
+        return fromSRC.remove(key);
+    }
+
+    /**
+     * Method to remove given key from dest map
+     * @param key
+     * @return
+     */
+    public EdgeData removeDEST(int key){
+        return toDEST.remove(key);
     }
 
     /**

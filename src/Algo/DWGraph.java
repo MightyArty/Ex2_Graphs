@@ -8,8 +8,7 @@ import java.util.*;
 
 public class DWGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> nodes;
-    private HashMap<Vector<Integer>, EdgeData> edges;
-    private HashMap<Integer, HashSet<Integer>> againstDirection;
+    private HashMap<Vector<Integer>, EdgeData> edges;   // vector --> (src,dest)
     private int edgeSize;
     private int mc;
 
@@ -67,7 +66,7 @@ public class DWGraph implements DirectedWeightedGraph {
     public void addNode(NodeData n) {
         if(n == null || this.nodes.containsKey(n.getKey()) || nodes.get(n.getKey()) != null)
             throw new RuntimeException("The new node does not exist or the key already exist");
-        nodes.put(n.getKey(),(Node)n);
+        nodes.put(n.getKey(),n);
         this.mc ++;
     }
 
@@ -90,17 +89,18 @@ public class DWGraph implements DirectedWeightedGraph {
         node.addFromSRC(dest,edge);
         node = (Node) nodes.get(dest);
         node.addToDEST(src,edge);
+        this.edgeSize ++;
         this.mc ++;
     }
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return null;
+        return nodes.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return null;
+        return edges.values().iterator();
     }
 
     @Override
@@ -118,11 +118,26 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public NodeData removeNode(int key) {
         if(!this.nodes.containsKey(key))
-            throw new RuntimeException("The graph does not contain this node!");
-        NodeData deleted = this.nodes.get(key); // getting the needed node to delete
-        this.nodes.remove(key);
-        this.mc++;
-        // NEED TO WORK
+            throw new RuntimeException("The graph does not contain this vertex!");
+        Node vertex = (Node) nodes.remove(key);
+        Iterator<EdgeData> i = vertex.getFromSRCIter();
+        while (i.hasNext()){
+            EdgeData runner = i.next();
+            Vector<Integer> v = new Vector<>(runner.getSrc(), runner.getDest());
+            edges.remove(v);
+            Node src = (Node) nodes.get(runner.getSrc());
+            src.removeSRC(runner.getSrc());
+        }
+
+        i = vertex.getToDESTIter();
+        while (i.hasNext()){
+            EdgeData runner = i.next();
+            Vector<Integer> v = new Vector<>(runner.getSrc(), runner.getDest());
+            edges.remove(v);
+            Node dest = (Node) nodes.get(runner.getDest());
+            dest.removeDEST(runner.getDest());
+        }
+        return vertex;
     }
 
     @Override
