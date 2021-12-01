@@ -43,7 +43,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public boolean isConnected() {
-        return false;
+return false;
     }
 
     @Override

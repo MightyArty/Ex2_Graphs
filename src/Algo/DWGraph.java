@@ -8,7 +8,8 @@ import java.util.*;
 
 public class DWGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> vertexes;
-    private HashMap<Integer, HashMap<Integer, EData>> edges;
+    private HashMap<Integer, HashMap<Integer,Integer>> graph;
+    private HashMap<Vector<Integer>, EdgeData> edges;
     // private HashMap<Integer, HashSet<Integer>> againstDirection;
     private int edgeSize;
     private int mc;
@@ -18,7 +19,8 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     public DWGraph() {
         this.vertexes = new HashMap<>();
-        this.edges = new HashMap<>();
+        this.graph = new HashMap<>();
+        this.edges=new HashMap<>();
         //this.againstDirection = new HashMap<>();
         this.edgeSize = 0;
         this.mc = 0;
@@ -49,7 +51,8 @@ public class DWGraph implements DirectedWeightedGraph {
     public EdgeData getEdge(int src, int dest) {
         if (!vertexes.containsKey(src) || !vertexes.containsKey(dest) || src == dest)
             throw new RuntimeException("There is no source or destination or the source is equal to destination");
-        else return edges.get(src).get(dest);
+        Vector<Integer> v = new Vector<>(src,dest);
+        return this.edges.get(v);
     }
 
     /**
@@ -64,11 +67,6 @@ public class DWGraph implements DirectedWeightedGraph {
             return;
         vertexes.put(n.getKey(), n);
         this.mc++;
-//        int key = n.getKey();
-//        this.graph.put(key, n);
-//        edges.put(key, new HashMap<>());
-//        againstDirection.put(key, new HashSet<>());
-//        this.mc++;
     }
 
     /**
@@ -84,36 +82,38 @@ public class DWGraph implements DirectedWeightedGraph {
         if (!this.vertexes.containsKey(src) || this.vertexes.containsKey(dest) || src == dest || w < 0)
             return;
         EData e = new EData(src, dest, w);
-        HashMap<Integer, EData> temp = edges.get(src);
-        temp.put(dest, e);
+        HashMap<Integer, Integer> temp = graph.get(src);
+        temp.put(dest, src);
         //check if there is any edge from the src
-        if (edges.containsKey(src)) {
-            Collection<EData> t = temp.values();
+        if (graph.containsKey(src)) {
+            Collection<Integer> t = temp.values();
             if (t.contains(dest)) return;
                 //add the edge for the src vertex to dest vertex
             else
-                edges.put(src, temp);
+                graph.put(src, temp);
 
         } else
             //add a new edge
-            edges.put(src, temp);
+            graph.put(src, temp);
         this.edgeSize++;
         this.mc++;
     }
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return null;
+        return vertexes.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return null;
+        return this.edges.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return null;
+        Node temp= (Node) this.vertexes.get(node_id);
+        int src=
+        return this.edges
     }
 
     /**
@@ -126,18 +126,17 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public NodeData removeNode(int key) {
-        HashMap<Integer, EData> temp = this.edges.get(key);
-        if (!this.vertexes.containsKey(key) && !temp.containsKey(key)) {
+        //check if the node is exist
+        if (!this.vertexes.containsKey(key)) {
             return null;
         }
-        Node del = (Node) this.vertexes.get(key);
-        if (temp.containsKey(key)) {
-            this.vertexes.remove(key);
-            this.edges.get(key).clear();
-
-        } else {
-            this.vertexes.remove(key);
-            this.edges.remove(key);
+        HashMap<Integer, Integer> temp = this.graph.get(key);
+        NodeData del = this.vertexes.get(key);
+        this.vertexes.remove(key);
+        //removes the edges from the graph
+        if (temp.containsValue(key)) {
+            this.edgeSize = this.edgeSize - temp.size();
+            this.graph.remove(key);
         }
         this.mc++;
         return del;
@@ -145,6 +144,16 @@ public class DWGraph implements DirectedWeightedGraph {
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
+        Vector<Integer> temp=new Vector<>(src,dest);
+        if(!this.edges.containsKey(temp)){
+            return null;
+        }
+        this.graph.remove(src);
+        EData del=new EData(src,dest);
+        this.edges.remove(temp);
+        this.mc++;
+        this.edgeSize--;
+
         return null;
     }
 
