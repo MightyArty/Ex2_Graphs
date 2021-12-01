@@ -137,12 +137,19 @@ public class DWGraph implements DirectedWeightedGraph {
             Node dest = (Node) nodes.get(runner.getDest());
             dest.removeDEST(runner.getDest());
         }
+        this.mc ++;
         return vertex;
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        return null;
+        Node vertex = (Node) nodes.get(dest);
+        vertex.removeSRC(src);
+        vertex = (Node) nodes.get(src);
+        vertex.removeDEST(dest);
+        Vector <Integer> v = new Vector<>(src,dest);
+        this.mc ++;
+        return edges.remove(v);
     }
 
     @Override
