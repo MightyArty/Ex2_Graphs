@@ -20,8 +20,8 @@ public class Node implements NodeData, Serializable {
     private String info;
     private Location location;
     private Color current = Color.WHITE;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
-    private Map<Integer, EdgeData> fromSRC; //hash map representing the start of path
-    private Map<Integer, EdgeData> toDEST;  //hash map representing the end of path
+    private HashMap<Integer, EdgeData> fromSRC; //hash map representing the start of path
+    private HashMap<Integer, EdgeData> toDEST;  //hash map representing the end of path
 
     /**
      * Class constructor
@@ -136,11 +136,11 @@ public class Node implements NodeData, Serializable {
         return keys;
     }
 
-    public Map<Integer, EdgeData> getFromSRC() {
+    public HashMap<Integer, EdgeData> getFromSRC() {
         return fromSRC;
     }
 
-    public Map<Integer, EdgeData> getToDEST() {
+    public HashMap<Integer, EdgeData> getToDEST() {
         return toDEST;
     }
 

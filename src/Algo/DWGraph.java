@@ -49,6 +49,7 @@ public class DWGraph implements DirectedWeightedGraph {
             EData edge = new EData(src,dest,weight);
 
             // NEED TO PUSH THE DATA TO THE SRC MAP AND DEST MAP !!!
+
         }
     }
 
@@ -146,6 +147,7 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
         return null;
+        /// NEED TO DO!
     }
 
     /**
