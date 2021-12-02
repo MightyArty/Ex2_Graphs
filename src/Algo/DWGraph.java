@@ -48,6 +48,7 @@ public class DWGraph implements DirectedWeightedGraph {
             int weight = edges.getJSONObject(i).getInt("w");
             EData edge = new EData(src,dest,weight);
 
+
         }
     }
 
@@ -124,12 +125,12 @@ public class DWGraph implements DirectedWeightedGraph {
             return;
         EdgeData edge = new EData(src, dest, w);
         Vector<Integer> v = new Vector<>(src,dest);
-        edges.remove(v);
+        edges.remove(v);    //דריסה
         edges.put(v,edge);
         Node node = (Node) nodes.get(src);
-        node.addFromSRC(dest,edge);
+        node.addFromSRC(dest,edge); // map from the src
         node = (Node) nodes.get(dest);
-        node.addToDEST(src,edge);
+        node.addToDEST(src,edge);   // map from the dest
         this.edgeSize ++;
         this.mc ++;
     }
@@ -144,9 +145,15 @@ public class DWGraph implements DirectedWeightedGraph {
         return this.edges.values().iterator();
     }
 
+    /**
+     * This method returns an Iterator for edges getting out of the given node (all the edges starting (source) at the given node).
+     * Note: if the graph was changed since the iterator was constructed - a RuntimeException should be thrown.
+     * @return Iterator<EdgeData>
+     */
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return null;
+        Node node = (Node) nodes.get(node_id);
+        return node.getToDESTIter();    // maybe doesn't work
     }
 
     /**
