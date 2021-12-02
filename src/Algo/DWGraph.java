@@ -8,7 +8,7 @@ import java.util.*;
 
 public class DWGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> vertexes;
-    private HashMap<Integer, HashMap<Integer,Integer>> graph;
+    private HashMap<Integer, HashMap<Integer,EdgeData>> graph;
     private HashMap<Vector<Integer>, EdgeData> edges;
     // private HashMap<Integer, HashSet<Integer>> againstDirection;
     private int edgeSize;
@@ -79,22 +79,25 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public void connect(int src, int dest, double w) {
-        if (!this.vertexes.containsKey(src) || this.vertexes.containsKey(dest) || src == dest || w < 0)
+        if (!this.vertexes.containsKey(src) || !this.vertexes.containsKey(dest) || src == dest || w < 0)
             return;
         EData e = new EData(src, dest, w);
-        HashMap<Integer, Integer> temp = graph.get(src);
-        temp.put(dest, src);
+        HashMap<Integer, EdgeData> temp=new HashMap<>();
         //check if there is any edge from the src
         if (graph.containsKey(src)) {
-            Collection<Integer> t = temp.values();
+            temp = graph.get(src); //src=1 dest =3
+            temp.put(dest, e);
+            Collection<EdgeData> t = temp.values();
             if (t.contains(dest)) return;
                 //add the edge for the src vertex to dest vertex
             else
-                graph.put(src, temp);
+                graph.get(src).put(dest,e);
 
-        } else
+        } else {
             //add a new edge
+            temp.put(src, e);
             graph.put(src, temp);
+        }
         this.edgeSize++;
         this.mc++;
     }
@@ -112,8 +115,17 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
         Node temp= (Node) this.vertexes.get(node_id);
-        int src=
-        return this.edges
+        Iterator<Map.Entry<Integer, NodeData>>iterator=this.vertexes.entrySet().iterator();
+        while(iterator.hasNext()){
+           Map.Entry<Integer,NodeData> entry=iterator.next();
+           if(node_id==entry.getKey()){
+               return iterator
+           }
+            }
+
+
+
+        return null;
     }
 
     /**
@@ -136,6 +148,7 @@ public class DWGraph implements DirectedWeightedGraph {
         //removes the edges from the graph
         if (temp.containsValue(key)) {
             this.edgeSize = this.edgeSize - temp.size();
+            this.graph.get(key).clear();
             this.graph.remove(key);
         }
         this.mc++;
@@ -149,7 +162,7 @@ public class DWGraph implements DirectedWeightedGraph {
             return null;
         }
         this.graph.remove(src);
-        EData del=new EData(src,dest);
+        EData del=new EData(src,dest,7);
         this.edges.remove(temp);
         this.mc++;
         this.edgeSize--;
