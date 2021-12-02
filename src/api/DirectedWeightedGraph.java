@@ -11,9 +11,9 @@ import java.util.Iterator;
 
 public interface DirectedWeightedGraph {
 	/**
-	 * returns the node_data by the node_id,
+	 * returns the Ex2.node_data by the node_id,
 	 * @param key - the node_id
-	 * @return the node_data by the node_id, null if none.
+	 * @return the Ex2.node_data by the node_id, null if none.
 	 */
 	public NodeData getNode(int key);
 	/**
@@ -25,7 +25,7 @@ public interface DirectedWeightedGraph {
 	 */
 	public EdgeData getEdge(int src, int dest);
 	/**
-	 * adds a new node to the graph with the given node_data.
+	 * adds a new node to the graph with the given Ex2.node_data.
 	 * Note: this method should run in O(1) time.
 	 * @param n
 	 */
@@ -42,7 +42,7 @@ public interface DirectedWeightedGraph {
 	 * This method returns an Iterator for the
 	 * collection representing all the nodes in the graph.
 	 * Note: if the graph was changed since the iterator was constructed - a RuntimeException should be thrown.
-	 * @return Iterator<node_data>
+	 * @return Iterator<Ex2.node_data>
 	 */
 	public Iterator<NodeData> nodeIter();
 	/**
