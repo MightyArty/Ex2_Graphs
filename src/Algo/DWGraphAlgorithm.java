@@ -13,20 +13,22 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     /**
      * Constructor
+     *
      * @param graph
      */
-    public DWGraphAlgorithm(DirectedWeightedGraph graph){
+    public DWGraphAlgorithm(DirectedWeightedGraph graph) {
         this.myGraph = graph;
     }
 
     /**
      * Empty Constructor
      */
-    public DWGraphAlgorithm(){}
+    public DWGraphAlgorithm() {
+    }
 
     @Override
     public void init(DirectedWeightedGraph g) {
-        this.myGraph = new DWGraph(g);
+     //   this.myGraph = new DWGraph(g);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public boolean isConnected() {
-        return false;
+return false;
     }
 
     @Override
@@ -53,14 +55,15 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     /**
      * Returning the shortest path from src to dest - as list of NODES
      * example : src --> node1 --> node2 --> node3 --> ... --> dest
-     * @param src - start node
+     *
+     * @param src  - start node
      * @param dest - end (target) node
      * @return
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         // if there is no src or no dest just return
-        if (myGraph.getNode(src) == null || myGraph.getNode(dest) == null){
+        if (myGraph.getNode(src) == null || myGraph.getNode(dest) == null) {
             return null;
         }
         Queue<EData> Qdist = new LinkedList<EData>();
@@ -70,11 +73,11 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         HashMap<Integer, ArrayList<Integer>> path = new HashMap<Integer, ArrayList<Integer>>(myGraph.nodeSize());
         EData currNode = null;
         Node index = (Node) myGraph.getNode(src);
-        dist.put(src,(double) 0);
+        dist.put(src, (double) 0);
         path.put(src, new ArrayList<Integer>());
         path.get(src).add(src);
         int j = 0;
-
+        return null;
     }
 
     @Override
