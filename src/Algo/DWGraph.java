@@ -42,7 +42,7 @@ public class DWGraph implements DirectedWeightedGraph {
         for (int i = 0; i < edges.length(); i++) {
             // puling the dest
             int dest = edges.getJSONObject(i).getInt("dest");
-            // puling the src
+//             puling the src
             int src = edges.getJSONObject(i).getInt("src");
             // puling the weight of the edge
             int weight = edges.getJSONObject(i).getInt("w");

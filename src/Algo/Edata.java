@@ -2,30 +2,38 @@ package Algo;
 
 import api.EdgeData;
 
-public class Edata implements EdgeData {
-    private int Src, Dest, tag;
+public class EData implements EdgeData {
+    private int Src, Dest;
+    private int tag;
     double Weight;
     private String info;
 
     /**
-     * copy contractor
-     *
-     * @param e
+     * Connecting the src to dest
+     * @param src - given source
+     * @param dest - given destination
+     * @param weight - given weight
      */
-    public Edata(EdgeData e) {
-        this.Dest = e.getDest();
-        this.Src = e.getSrc();
-        this.Weight = e.getWeight();
-    }
-
-    public Edata(int src, int dest, double weight) {
-        if (weight < 0) throw new RuntimeException("ERR: weight cant be negetive");
+    public EData(int src, int dest, double weight) {
+        if (weight < 0) throw new RuntimeException("ERR: weight cant be negative");
         if (src == dest) throw new RuntimeException("ERR: the destination can't be equals to the source ");
         this.Dest = dest;
         this.Src = src;
         this.Weight = weight;
+        this.info = null;
+        this.tag = -1000000000; // just for setup
     }
 
+    /**
+     * Copy Constructor
+     * @param other
+     */
+    public EData(EdgeData other) {
+        this.Dest = other.getDest();
+        this.Src = other.getSrc();
+        this.Weight = other.getWeight();
+        this.tag = -1000000000; // just for setup
+    }
 
     @Override
     public int getSrc() {
@@ -46,6 +54,11 @@ public class Edata implements EdgeData {
     @Override
     public String getInfo() {
         return this.info;
+    }
+
+    @Override
+    public String toString(){
+        return "EData{" + "source=" + this.Src + ",destination=" + this.Dest + ",weight=" + this.Weight + ",info=" + this.info + "and the tag=" + this.tag + "}";
     }
 
     @Override
