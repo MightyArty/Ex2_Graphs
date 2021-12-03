@@ -3,42 +3,42 @@ package Algo;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
+import com.google.gson.Gson;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
-    public DirectedWeightedGraph myGraph;
+    public DWGraph myGraph;
     public boolean OK = true;
 
     /**
-     * Constructor
-     *
-     * @param graph
+     * Inits the graph on which this set of algorithms operates on.
+     * @param g
      */
-    public DWGraphAlgorithm(DirectedWeightedGraph graph) {
-        this.myGraph = graph;
+    @Override
+    public void init(DirectedWeightedGraph g) {
+        this.myGraph = (DWGraph) g;
     }
 
     /**
-     * Empty Constructor
+     * Empty constructor
      */
-    public DWGraphAlgorithm() {
-    }
-
-    @Override
-    public void init(DirectedWeightedGraph g) {
-     //   this.myGraph = new DWGraph(g);
+    public DWGraphAlgorithm(){
+        this.myGraph = new DWGraph();
     }
 
     @Override
     public DirectedWeightedGraph getGraph() {
-        return null;
+        return this.myGraph;
     }
 
     @Override
     public DirectedWeightedGraph copy() {
-        return null;
+        DWGraph copy = this.myGraph;
+        return copy;
     }
 
     @Override
@@ -92,7 +92,19 @@ return false;
 
     @Override
     public boolean save(String file) {
-        return false;
+        Gson gson = new Gson();
+        String out = gson.toJson(myGraph.getNodes());
+        boolean result = false;
+        try {
+            FileWriter writer = new FileWriter(file);
+            writer.write(out);
+            writer.flush();
+            result = true;
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
