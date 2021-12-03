@@ -1,12 +1,13 @@
 package Algo;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
+
+import java.awt.*;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class Node implements NodeData, Serializable {
 
@@ -16,72 +17,52 @@ public class Node implements NodeData, Serializable {
     private double weight;
     private String info;
     private Location location;
+    private Color current = Color.WHITE;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
+    private HashMap<Integer, EdgeData> fromSRC; //hash map representing the start of path
+    private HashMap<Integer, EdgeData> toDEST;  //hash map representing the end of path
 
     /**
-     * Main Constructor
-     * @param key
-     * @param tag
-     * @param weight
-     * @param info
-     * @param location
-     */
-    public Node(int key, int tag, double weight, String info, Location location){
-        this.key = key;
-        this.tag = tag;
-        this.weight = weight;
-        if(info == null)
-            this.info = new String();
-        else this.info = info;
-        if(location == null)
-            this.location = new Location();
-        else this.location = location;
-    }
-
-    /**
-     * Constructor for key and given location
-     * @param key
-     * @param location
-     */
-    public Node(int key, Location location) {
-        this.key = key;
-        if(location == null) return;
-        this.location = location;
-    }
-
-    /**
-     * Empty constructor only for given key
-     * @param key
-     */
-    public Node(int key){
-        this.key = key;
-        this.location = new Location();
-        this.weight = 0;
-        this.tag = 0;
-        this.info = "";
-    }
-
-    /**
-     * Empty Constructor
+     * Class constructor
      */
     public Node(){
-        this.key = keys++;
-        this.location = new Location();
-        this.weight = 0;
+        this.key=-1;
+        this.tag=-1;
+        this.weight=-1;
+        this.info="";
+        this.location=new Location();
+        this.current=Color.WHITE;
+        this.fromSRC=new HashMap<>();
+        this.toDEST=new HashMap<>();
+    }
+    public Node(api.Node node){
+        this.key = node.getKey();
+        this.location = new Location(node.getLocation().x(), node.getLocation().y(), node.getLocation().z());
+        this.weight = node.getWeight();
         this.tag = 0;
-        this.info = "";
+        this.info = node.getInfo();
+        this.fromSRC = new HashMap<>();
+        this.toDEST = new HashMap<>();
     }
 
     /**
-     * Copy Constructor
-     * @param other
+     * Constructor for given key and location
+     * @param key
+     * @param loc
      */
-    public Node(NodeData other){
-        if (other == null) return;
-        this.key = other.getKey();
-        this.location = new Location(other.getLocation());
-        this.weight = other.getWeight();
-        this.tag = other.getTag();
-        this.info = new String(other.getInfo());
+    public Node(int key, String loc) {
+        this.key = key;
+        this.weight = 0;
+        this.info = "";
+        this.tag = 0;
+        this.fromSRC = new HashMap<>();
+        this.toDEST = new HashMap<>();
+
+        String[] locArr = loc.split(",");
+        double x = Double.parseDouble(locArr[0]); // x coordinate
+        double y = Double.parseDouble(locArr[1]); // y coordinate
+        double z = Double.parseDouble(locArr[2]); // z coordinate
+
+        this.location = new Location(x,y,z);
     }
 
     @Override
@@ -122,6 +103,70 @@ public class Node implements NodeData, Serializable {
     @Override
     public void setTag(int t) {
         this.tag = t;
+    }
+
+    /**
+     * adding the src info to the map
+     * @param key
+     * @param edge
+     */
+    public void addFromSRC(int key, EdgeData edge){
+        fromSRC.put(key,edge);
+    }
+
+    /**
+     * adding the dest info to the map
+     * @param key
+     * @param edge
+     */
+    public void addToDEST(int key, EdgeData edge){
+        toDEST.put(key,edge);
+    }
+
+    /**
+     * Iterator for fromSRC map
+     * @return
+     */
+    public Iterator<EdgeData> getFromSRCIter(){
+        return fromSRC.values().iterator();
+    }
+
+    /**
+     * Iterator for toDEST map
+     * @return
+     */
+    public Iterator<EdgeData> getToDESTIter(){
+        return toDEST.values().iterator();
+    }
+
+    public static int getKeys() {
+        return keys;
+    }
+
+    public HashMap<Integer, EdgeData> getFromSRC() {
+        return fromSRC;
+    }
+
+    public HashMap<Integer, EdgeData> getToDEST() {
+        return toDEST;
+    }
+
+    /**
+     * Method to remove given key from src map
+     * @param key
+     * @return
+     */
+    public EdgeData removeSRC(int key){
+        return fromSRC.remove(key);
+    }
+
+    /**
+     * Method to remove given key from dest map
+     * @param key
+     * @return
+     */
+    public EdgeData removeDEST(int key){
+        return toDEST.remove(key);
     }
 
     /**
