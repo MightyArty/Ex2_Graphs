@@ -127,9 +127,9 @@ public class DWGraph implements DirectedWeightedGraph {
         Vector<Integer> v = new Vector<>(src,dest);
         edges.remove(v);    //דריסה
         edges.put(v,edge);
-        NodeData node = (NodeData) nodes.get(src);
+        Node node = (Node) nodes.get(src);
         node.addFromSRC(dest,edge); // map from the src
-        node = (NodeData) nodes.get(dest);
+        node = (Node) nodes.get(dest);
         node.addToDEST(src,edge);   // map from the dest
         this.edgeSize ++;
         this.mc ++;
@@ -152,7 +152,7 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        NodeData node = (NodeData) nodes.get(node_id);
+        Node node = (Node) nodes.get(node_id);
         return node.getToDESTIter();    // maybe doesn't work
     }
 
@@ -167,13 +167,13 @@ public class DWGraph implements DirectedWeightedGraph {
     public NodeData removeNode(int key) {
         if(!this.nodes.containsKey(key))
             throw new RuntimeException("The graph does not contain this vertex!");
-        NodeData vertex = (NodeData) nodes.remove(key);
+        Node vertex = (Node) nodes.remove(key);
         Iterator<EdgeData> i = vertex.getFromSRCIter();
         while (i.hasNext()){
             EdgeData runner = i.next();
             Vector<Integer> v = new Vector<>(runner.getSrc(), runner.getDest());
             edges.remove(v);
-            NodeData src = (NodeData) nodes.get(runner.getSrc());
+            Node src = (Node) nodes.get(runner.getSrc());
             src.removeSRC(runner.getSrc());
         }
 
@@ -182,7 +182,7 @@ public class DWGraph implements DirectedWeightedGraph {
             EdgeData runner = i.next();
             Vector<Integer> v = new Vector<>(runner.getSrc(), runner.getDest());
             edges.remove(v);
-            NodeData dest = (NodeData) nodes.get(runner.getDest());
+            Node dest = (Node) nodes.get(runner.getDest());
             dest.removeDEST(runner.getDest());
         }
         this.mc ++;
@@ -191,9 +191,9 @@ public class DWGraph implements DirectedWeightedGraph {
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        NodeData vertex = (NodeData) nodes.get(dest);
+        Node vertex = (Node) nodes.get(dest);
         vertex.removeSRC(src);
-        vertex = (NodeData) nodes.get(src);
+        vertex = (Node) nodes.get(src);
         vertex.removeDEST(dest);
         Vector <Integer> v = new Vector<>(src,dest);
         this.mc ++;

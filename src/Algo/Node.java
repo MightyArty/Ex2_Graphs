@@ -1,13 +1,15 @@
 package Algo;
 
-import api.EdgeData;
-import api.GeoLocation;
-import api.NodeData;
-
 import java.awt.*;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import api.EdgeData;
+import api.GeoLocation;
+import api.NodeData;
 
 public class Node implements NodeData, Serializable {
 
@@ -23,18 +25,9 @@ public class Node implements NodeData, Serializable {
 
     /**
      * Class constructor
+     * @param node
      */
-    public Node(){
-        this.key=-1;
-        this.tag=-1;
-        this.weight=-1;
-        this.info="";
-        this.location=new Location();
-        this.current=Color.WHITE;
-        this.fromSRC=new HashMap<>();
-        this.toDEST=new HashMap<>();
-    }
-    public Node(Node node){
+    public Node(NodeData node){
         this.key = node.getKey();
         this.location = new Location(node.getLocation().x(), node.getLocation().y(), node.getLocation().z());
         this.weight = node.getWeight();
