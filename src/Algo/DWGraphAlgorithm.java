@@ -2,11 +2,15 @@ package Algo;
 
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
+import api.EdgeData;
 import api.NodeData;
 import com.google.gson.Gson;
 
+import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.Queue;
 import java.util.*;
 
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
@@ -16,6 +20,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     /**
      * Inits the graph on which this set of algorithms operates on.
+     *
      * @param g
      */
     @Override
@@ -26,7 +31,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     /**
      * Empty constructor
      */
-    public DWGraphAlgorithm(){
+    public DWGraphAlgorithm() {
         this.myGraph = new DWGraph();
     }
 
@@ -43,7 +48,11 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public boolean isConnected() {
-return false;
+        if (DFS() > 1)// There is more than one component
+            return false;
+        else{
+
+        }
     }
 
     @Override
@@ -100,8 +109,7 @@ return false;
             writer.write(out);
             writer.flush();
             result = true;
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
@@ -110,5 +118,31 @@ return false;
     @Override
     public boolean load(String file) {
         return false;
+    }
+
+    public int DFS() {
+        int count = 0;
+        Iterator<NodeData> i = this.myGraph.nodeIter();
+        while (i.hasNext()) {
+            Node node = (Node) i;
+            if (node.getCurrent() == Color.WHITE) {
+                count++;
+                DFS_visit((DWGraph) this.myGraph, node);
+            }
+        }
+        return count;
+    }
+
+    public void DFS_visit(DWGraph graph, Node n) {
+        n.setCurrent(Color.GRAY);
+        Iterator<EdgeData> i = graph.edgeIter(n.getKey());
+        while (i.hasNext()) {
+            EdgeData edge = i.next();
+            Node v = (Node) graph.getNode(edge.getDest());
+            if (v.getCurrent() == Color.WHITE) {
+                DFS_visit(graph, v);
+            }
+        }
+        n.setCurrent(Color.BLACK);
     }
 }
