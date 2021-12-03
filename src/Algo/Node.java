@@ -34,7 +34,7 @@ public class Node implements NodeData, Serializable {
         this.fromSRC=new HashMap<>();
         this.toDEST=new HashMap<>();
     }
-    public Node(api.Node node){
+    public Node(Node node){
         this.key = node.getKey();
         this.location = new Location(node.getLocation().x(), node.getLocation().y(), node.getLocation().z());
         this.weight = node.getWeight();

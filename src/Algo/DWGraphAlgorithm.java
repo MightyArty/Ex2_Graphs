@@ -2,7 +2,6 @@ package Algo;
 
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
-import api.NodeData;
 
 import java.util.*;
 
@@ -61,7 +60,7 @@ return false;
      * @return
      */
     @Override
-    public List<NodeData> shortestPath(int src, int dest) {
+    public List<Node> shortestPath(int src, int dest) {
         // if there is no src or no dest just return
         if (myGraph.getNode(src) == null || myGraph.getNode(dest) == null) {
             return null;
@@ -81,12 +80,12 @@ return false;
     }
 
     @Override
-    public NodeData center() {
+    public Node center() {
         return null;
     }
 
     @Override
-    public List<NodeData> tsp(List<NodeData> cities) {
+    public List<api.NodeData> tsp(List<api.NodeData> cities) {
         return null;
     }
 
@@ -98,5 +97,18 @@ return false;
     @Override
     public boolean load(String file) {
         return false;
+    }
+
+    private void DFS(){
+        int count= 0;// connectivity
+        Iterator<Node> i = this.myGraph.nodeIter();
+        Node n=new Node();
+        ((Node) n).current=
+        while(i.hasNext()){
+
+
+        }
+
+
     }
 }

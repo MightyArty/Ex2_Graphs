@@ -15,7 +15,7 @@ public interface DirectedWeightedGraph {
 	 * @param key - the node_id
 	 * @return the Ex2.node_data by the node_id, null if none.
 	 */
-	public NodeData getNode(int key);
+	public Node getNode(int key);
 	/**
 	 * returns the data of the edge (src,dest), null if none.
 	 * Note: this method should run in O(1) time.
@@ -29,7 +29,7 @@ public interface DirectedWeightedGraph {
 	 * Note: this method should run in O(1) time.
 	 * @param n
 	 */
-	public void addNode(NodeData n);
+	public void addNode(Node n);
 /**
  * Connects an edge with weight w between node src to node dest.
  * * Note: this method should run in O(1) time.
@@ -44,7 +44,7 @@ public interface DirectedWeightedGraph {
 	 * Note: if the graph was changed since the iterator was constructed - a RuntimeException should be thrown.
 	 * @return Iterator<Ex2.node_data>
 	 */
-	public Iterator<NodeData> nodeIter();
+	public Iterator<Node> nodeIter();
 	/**
 	 * This method returns an Iterator for all the edges in this graph.
 	 * Note: if any of the edges going out of this node were changed since the iterator was constructed - a RuntimeException should be thrown.
@@ -65,7 +65,7 @@ public interface DirectedWeightedGraph {
 	 * @return the data of the removed node (null if none). 
 	 * @param key
 	 */
-	public NodeData removeNode(int key);
+	public Node removeNode(int key);
 	/**
 	 * Deletes the edge from the graph,
 	 * Note: this method should run in O(1) time.
