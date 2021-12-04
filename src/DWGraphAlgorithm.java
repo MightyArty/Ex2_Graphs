@@ -12,7 +12,6 @@ import java.util.*;
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public DWGraph myGraph;
-    public boolean OK = true;
 
     /**
      * Inits the graph on which this set of algorithms operates on.
