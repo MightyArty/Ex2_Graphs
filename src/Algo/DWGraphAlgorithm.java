@@ -50,9 +50,30 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     public boolean isConnected() {
         if (DFS() > 1)// There is more than one component
             return false;
-        else{
-
+        else {
+            int edgeSize = this.myGraph.edgeSize();
+            int nodeSize = this.myGraph.nodeSize();
+            if (edgeSize == nodeSize * (nodeSize - 1)) return true;
+            DWGraph temp = this.myGraph;
+            Node node = (Node) this.myGraph.getNode(0);
+            //painting the nodes to gray
+            DFSConnect(temp, node);
+            Iterator<Node> i = (Iterator<Node>) temp.getNode(0);
+            //check if all the nodes is GRAY
+            while (i.hasNext()) {
+                //if one of the nodes is not gray, the graph is not connected
+                if (i.next().getCurrent() != Color.GRAY) return false;
+            }
+            //transposing the graph
+            temp = tran();
+            DFSConnect(temp,node);
+            //check if all the nodes is GRAY again
+            i = (Iterator<Node>) temp.getNode(0);
+            while(i.hasNext())
+                //if one of the nodes is not gray, the transpose graph is not connected
+            if (i.next().getCurrent() != Color.GRAY) return false;
         }
+        return true;
     }
 
     @Override
@@ -145,4 +166,39 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         }
         n.setCurrent(Color.BLACK);
     }
+
+    public void DFSConnect(DWGraph g, Node node) {
+        node.setCurrent(Color.GRAY);
+        Iterator<EdgeData> i = g.edgeIter(node.getKey());
+        //running on all the edges
+        while (i.hasNext()) {
+            EdgeData edge = i.next();
+            //check if we didn't pass this node
+            if (node.getCurrent() == Color.WHITE) {
+                Node v = (Node) g.getNode(edge.getDest());
+                DFSConnect(g, v);
+            }
+        }
+    }
+
+    public DWGraph tran() {
+        DWGraph ans = new DWGraph();
+        Iterator<NodeData> i = this.myGraph.nodeIter();
+        //add the all nodes to the ans graph
+        while (i.hasNext()) {
+            ans.addNode(i.next());
+        }
+        i = this.myGraph.nodeIter();
+        //adding the all edges that exist in myGraph
+        while (i.hasNext()) {
+            Node node = (Node) i.next();
+            Iterator<EdgeData> edge = this.myGraph.edgeIter(node.getKey());
+            while (edge.hasNext()) {
+                EData e = (EData) edge.next();
+                ans.connect(e.getSrc(), e.getDest(), e.getWeight());
+            }
+        }
+        return ans;
+    }
+
 }
