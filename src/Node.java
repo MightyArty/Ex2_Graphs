@@ -1,11 +1,7 @@
-package Algo;
-
 import java.awt.*;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import api.EdgeData;
 import api.GeoLocation;
@@ -23,8 +19,13 @@ public class Node implements NodeData, Serializable {
     private HashMap<Integer, EdgeData> fromSRC; //hash map representing the start of path
     private HashMap<Integer, EdgeData> toDEST;  //hash map representing the end of path
 
+    public Node(double x, double y, double z, int key){
+        this.key = key;
+        this.location = new Location(x, y, z);
+    }
+
     /**
-     * Class constructor
+     * Copy constructor
      * @param node
      */
     public Node(NodeData node){

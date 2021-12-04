@@ -1,5 +1,3 @@
-package Algo;
-
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
@@ -20,36 +18,6 @@ public class DWGraph implements DirectedWeightedGraph {
     public DWGraph(DirectedWeightedGraph graph){
         nodes = new HashMap<>();
         edges = new HashMap<>();
-    }
-
-    /**
-     * Getting the data from json file
-     * @param json_file
-     */
-    public DWGraph(String json_file) {
-        nodes = new HashMap<>();
-        edges = new HashMap<>();
-
-        JSONObject json = new JSONObject();
-        try {
-            json = parseJSON(json_file);
-        }
-        catch (IOException exception){
-            exception.printStackTrace();
-        }
-        // puling the edges from json file
-        JSONArray edges = json.getJSONArray("Edges");
-        for (int i = 0; i < edges.length(); i++) {
-            // puling the dest
-            int dest = edges.getJSONObject(i).getInt("dest");
-            // puling the src
-            int src = edges.getJSONObject(i).getInt("src");
-            // puling the weight of the edge
-            int weight = edges.getJSONObject(i).getInt("w");
-            EData edge = new EData(src,dest,weight);
-
-
-        }
     }
 
     /**
@@ -153,7 +121,7 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
         Node node = (Node) nodes.get(node_id);
-        return node.getToDESTIter();    // maybe doesn't work
+        return node.getToDESTIter();    // maybe need to fix
     }
 
     /**

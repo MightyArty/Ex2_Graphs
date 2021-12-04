@@ -1,25 +1,23 @@
-package Algo;
-
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
-import com.google.gson.Gson;
+import com.google.gson.*;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public DWGraph myGraph;
-    public boolean OK = true;
 
     /**
      * Inits the graph on which this set of algorithms operates on.
-     *
      * @param g
      */
     @Override
@@ -30,7 +28,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     /**
      * Empty constructor
      */
-    public DWGraphAlgorithm() {
+    public DWGraphAlgorithm(){
         this.myGraph = new DWGraph();
     }
 
@@ -70,7 +68,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             i = (Iterator<Node>) temp.getNode(0);
             while(i.hasNext())
                 //if one of the nodes is not gray, the transpose graph is not connected
-            if (i.next().getCurrent() != Color.GRAY) return false;
+                if (i.next().getCurrent() != Color.GRAY) return false;
         }
         return true;
     }
@@ -81,17 +79,9 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         return 0;
     }
 
-    /**
-     * Returning the shortest path from src to dest - as list of NODES
-     * example : src --> node1 --> node2 --> node3 --> ... --> dest
-     *
-     * @param src  - start node
-     * @param dest - end (target) node
-     * @return
-     */
+
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-
         return null;
     }
 
@@ -115,7 +105,8 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             writer.write(out);
             writer.flush();
             result = true;
-        } catch (IOException e) {
+        }
+        catch (IOException e){
             e.printStackTrace();
         }
         return result;
@@ -123,7 +114,45 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public boolean load(String file) {
-        return false;
+        boolean flag = false;
+        try {
+            JsonElement element = JsonParser.parseReader(new FileReader(file));
+            JsonObject object = element.getAsJsonObject();
+            JsonArray nodes = object.get("Nodes").getAsJsonArray();
+            JsonArray edges = object.get("Edges").getAsJsonArray();
+            for(int i = 0 ; i < edges.size() ; i++){
+                JsonObject e = new Gson().fromJson(edges.get(i), JsonObject.class);
+                String first = e.get("src").getAsString();
+                String second = e.get("dest").getAsString();
+                String third = e.get("w").getAsString();
+                int src = Integer.parseInt(first);
+                int dest = Integer.parseInt(second);
+                double weight = Integer.parseInt(third);
+                myGraph.connect(src,dest,weight);
+            }
+            for(int i = 0 ; i < nodes.size() ; i++){
+                JsonObject n = new Gson().fromJson(nodes.get(i), JsonObject.class);
+                String position = n.get("pos").getAsString();
+                String[] positionArr = position.split(",");
+                double[] arr = new double[3];
+                for(int k = 0 ; k < positionArr.length ; k++){
+                    arr[k] = Double.parseDouble(positionArr[k]);
+                }
+
+                String id = n.get("id").getAsString();
+                double x = arr[0];
+                double y = arr[1];
+                double z = arr[2];
+                int actualID = Integer.parseInt(id);
+                Node newNode = new Node(x,y,z,actualID);
+                myGraph.addNode(newNode);
+            }
+            flag = true;
+        }
+        catch (FileNotFoundException exception){
+            exception.printStackTrace();
+        }
+        return flag;
     }
 
     public int DFS() {
@@ -186,5 +215,4 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         }
         return ans;
     }
-
 }

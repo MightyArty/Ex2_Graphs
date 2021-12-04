@@ -1,5 +1,19 @@
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.*;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.ParseException;
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
@@ -10,12 +24,8 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
-    public static DirectedWeightedGraph getGrapg(String json_file) {
-        DirectedWeightedGraph ans = null;
-        // ****** Add your code here ******
-        //
-        // ********************************
-        return ans;
+    public static DirectedWeightedGraph getGrapg(String json_file) throws FileNotFoundException, ParseException, IOException {
+        return null;
     }
     /**
      * This static function will be used to test your implementation
@@ -39,5 +49,10 @@ public class Ex2 {
         // ****** Add your code here ******
         //
         // ********************************
+    }
+
+    private static JSONObject parseJSON(String json_file) throws JSONException, IOException{
+        String out = new String(Files.readAllBytes(Paths.get(json_file)));
+        return new JSONObject(out);
     }
 }
