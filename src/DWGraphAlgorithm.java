@@ -79,14 +79,52 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         return 0;
     }
 
-
+    /**
+     * Computes the the shortest path between src to dest - as an ordered List of nodes:
+     * src--> n1-->n2-->...dest
+     * if no such path --> returns null;
+     * @param src - start node
+     * @param dest - end (target) node
+     * @return list of the path nodes
+     */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         return null;
     }
 
+    /**
+     * Finds the NodeData which minimizes the max distance to all the other nodes.
+     * Assuming the graph isConnected, elese return null.
+     * @return the Node data to which the max shortest path to all the other nodes is minimized.
+     */
     @Override
     public NodeData center() {
+        if (!isConnected())
+            return null;
+        // the first node of the graph
+        Iterator<NodeData> node = myGraph.nodeIter();
+        double maximumValue = Double.MAX_VALUE;
+        int compare = 0;
+        // go through all the nodes starting at the first
+        while (node.hasNext()){
+            NodeData first = node.next();
+            double minimumValue = 0;
+            Iterator<NodeData> current = myGraph.nodeIter();
+            // this while is for check the first one with all the others' node at each run
+            while (current.hasNext()){
+                NodeData second = current.next();
+                if (myGraph.getEdge(first.getKey(), second.getKey()) != null){
+                    if (myGraph.getEdge(first.getKey(), second.getKey()).getWeight() > minimumValue)
+                        minimumValue = myGraph.getEdge(first.getKey(), second.getKey()).getWeight();
+                }
+            }
+            if(maximumValue > minimumValue){
+                maximumValue = minimumValue;
+                compare = first.getKey();
+            }
+            if(compare != 0)
+                return myGraph.getNode(compare);
+        }
         return null;
     }
 
@@ -95,6 +133,12 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         return null;
     }
 
+    /**
+     * Saves this weighted (directed) graph to the given
+     * file name - in JSON format
+     * @param file - the file name (may include a relative path).
+     * @return true - iff the file was successfully saved
+     */
     @Override
     public boolean save(String file) {
         Gson gson = new Gson();
@@ -112,6 +156,14 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         return result;
     }
 
+    /**
+     * This method loads a graph to this graph algorithm.
+     * if the file was successfully loaded - the underlying graph
+     * of this class will be changed (to the loaded one), in case the
+     * graph was not loaded the original graph should remain "as is".
+     * @param file - file name of JSON file
+     * @return true - iff the graph was successfully loaded.
+     */
     @Override
     public boolean load(String file) {
         boolean flag = false;
