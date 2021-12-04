@@ -1,5 +1,3 @@
-package Algo;
-
 import api.GeoLocation;
 import com.google.gson.Gson;
 
