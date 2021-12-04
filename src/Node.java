@@ -154,12 +154,10 @@ public class Node implements NodeData, Serializable {
         return keys;
     }
 
-    @Override
     public HashMap<Integer, EdgeData> getFromSRC() {
         return fromSRC;
     }
 
-    @Override
     public HashMap<Integer, EdgeData> getToDEST() {
         return toDEST;
     }
