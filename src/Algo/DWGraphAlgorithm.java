@@ -9,9 +9,8 @@ import com.google.gson.Gson;
 import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
-import java.util.*;
 
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
@@ -92,21 +91,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        // if there is no src or no dest just return
-        if (myGraph.getNode(src) == null || myGraph.getNode(dest) == null) {
-            return null;
-        }
-        Queue<EData> Qdist = new LinkedList<EData>();
-        Queue<EData> Qnode = new LinkedList<EData>();
 
-        HashMap<Integer, Double> dist = new HashMap<Integer, Double>(myGraph.nodeSize());
-        HashMap<Integer, ArrayList<Integer>> path = new HashMap<Integer, ArrayList<Integer>>(myGraph.nodeSize());
-        EData currNode = null;
-        Node index = (Node) myGraph.getNode(src);
-        dist.put(src, (double) 0);
-        path.put(src, new ArrayList<Integer>());
-        path.get(src).add(src);
-        int j = 0;
         return null;
     }
 
