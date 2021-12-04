@@ -180,7 +180,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             Iterator<EdgeData> edge = this.myGraph.edgeIter(node.getKey());
             while (edge.hasNext()) {
                 EData e = (EData) edge.next();
-                ans.connect(e.getSrc(), e.getDest(), e.getWeight());
+                ans.connect(e.getDest(), e.getSrc(), e.getWeight());
             }
         }
         return ans;
