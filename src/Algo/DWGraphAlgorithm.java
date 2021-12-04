@@ -127,13 +127,14 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     }
 
     public int DFS() {
+        DWGraph temp=this.myGraph;
         int count = 0;
-        Iterator<NodeData> i = this.myGraph.nodeIter();
+        Iterator<NodeData> i = temp.nodeIter();
         while (i.hasNext()) {
             Node node = (Node) i;
             if (node.getCurrent() == Color.WHITE) {
                 count++;
-                DFS_visit((DWGraph) this.myGraph, node);
+                DFS_visit(temp, node);
             }
         }
         return count;
