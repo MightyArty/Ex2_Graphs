@@ -10,7 +10,7 @@ import java.util.*;
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     // HashMap that holds the information gathered by the Dijkstra algorithm for each node
-    private HashMap<Integer, HashMap<Integer, dNodeData>> dNodeMap;
+    private HashMap<Integer, Node> dNodeMap;
 
     public DirectedWeightedGraph myGraph;
     public NodeData myData;
@@ -62,7 +62,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             return 0;
         }
         // Using the Dijkstra algorithm to find the shortest path according to the weight from src to dest
-        shortAssist(src, dest);
+        shortAssistImproved(src, dest);
         // If the hashMap does not contain the dest key, then it did not reach the dest node, return -1
 
 
@@ -94,7 +94,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         path.put(src, new ArrayList<Integer>());
         path.get(src).add(src);
         int j = 0;
-//
+
     }
 
     @Override
@@ -118,81 +118,129 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     }
     // David
 
-    private void shortAssist(int src, int dest) {
+    private double shortAssistImproved(int src, int dest) {
+        DWGraph graph = (DWGraph) myGraph;
+        // creating new hashmap with double,(weight,nodeparent)
+        //HashMap<Double, dNodeData> nodeW = new HashMap<>();
+        // curr src
+        Node curr = (Node) graph.getNode(src);
+        //nodeW.put((double) 0, null);
+        dNodeMap.put(src, curr);
 
-//        dNodeMap = new HashMap<>();
-        HashMap<Integer, dNodeData> cNodeMap = new HashMap<>();
-        PriorityQueue<Integer> queue = new PriorityQueue<>();
-        // Adds the src node to the queue
-        NodeData srcNode = myGraph.getNode(src);
-        queue.add(srcNode.getKey());
-        //  holds the src with weight zero and puts it in the map
-        dNodeData n = new dNodeData();
-        cNodeMap.put(src, n);
-        dNodeMap.put(src, cNodeMap);
-        int tempSrc = src;
-        // Looping while queue is not empty
-        while (!queue.isEmpty()) {
-            // Gets the node with the lowest weight from the priority queue
-//            NodeData node = queue.poll();
-            // Loop over all the edges of this specific node
-
-            Iterator<EdgeData> iterator = myGraph.edgeIter(tempSrc);
-//            for (EdgeData edge : myGraph.edgeIter(Node.getKey())) {
-            while (iterator.hasNext()) {
-
-                EdgeData next = iterator.next();
-                // Calculate the weight sum by adding to the current weight of the edge to the previous sum weight
-                double sumWeight = next.getWeight() + dNodeMap.get(next.getSrc()).get(next.getSrc()).getWeightSum();
-                dNodeData temp = new dNodeData();
-                temp.setWeightSum(sumWeight);
-                cNodeMap.put(next.getDest(), temp);
-                dNodeMap.put(next.getDest(), cNodeMap);
-//                int tempNode = queue.poll();
-
-
-
-//              NodeData neighbor = myGraph.getNode(edge.getDest());
-                // Check if the neighbor does not exists in the map and the queue
-//                if (!dNodeMap.containsKey(neighbor.getKey()) && !queue.contains(neighbor)) {
-//                    // Add the neighbor to the map and to the queue
-//                    dNodeMap.put(edge.getDest(), new dNodeData(sumWeight, node));
-//                    queue.add(neighbor);
+        // Looping on all the vertices
+        for (Iterator<NodeData> it = graph.nodeIter(); it.hasNext(); ) {
+            Node temp = (Node) it.next();
+            if (temp.getKey() != src) {
+                // set all the others nodes to be infinity
+                temp.setWeight(Double.POSITIVE_INFINITY);
+                temp.setTag(-1);
+                temp.setInfo("Not visited");
             }
-            if (queue.isEmpty()) {
-                // need to be done - to check which veret's are connected to this node
-                // and to add them to the queue
-            tempSrc = queue.peek();
+        }
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.add(curr);
+        while (!pq.isEmpty()) {
+            Iterator<EdgeData> edge = graph.edgeIter(curr.getKey());
+            while (edge.hasNext() && pq.peek().getInfo() != "Visited") { // new condition
+                EData next = (EData) edge.next();
+                if (curr.getKey() != next.getDest()) {
+                    double sumWeight = next.getWeight() + dNodeMap.get(next.getSrc()).getWeight();
+                    //check if the weight is smaller than current weight
+                    if (graph.getNode(next.getDest()).getWeight() > sumWeight) {
+                        //init the node weight
+                        graph.getNode(next.getDest()).setWeight(sumWeight);
+                        // init the node parent
+                        graph.getNode(next.getDest()).setTag(next.getSrc());
+                        dNodeMap.put(next.getDest(), curr);
+                    }
+//                    if (pq.peek().getInfo() == "Not visited")
+                        pq.add((Node) graph.getNode(next.getDest()));
+                }
             }
-
-            // If the neighbor already exists in the map and the weightSum is lower, then replace it in the map
-//                else if (sumWeight < dNodeMap.get(edge.getDest()).getWeightSum()) {
-//                    dNodeMap.put(edge.getDest(), new dNodeData(sumWeight, node));
+            graph.getNode(pq.peek().getKey()).setInfo("Visited");
+            pq.poll();
+            curr = pq.peek();
         }
-        // If the current node is equal to dest then return
-        if (dest != null && node.getKey() == dest) {
-            return;
-        }
+        double ans = graph.getNode(dest).getWeight();
+        return ans;
+//    private void shortAssist(int src, int dest) {
+//
+////        dNodeMap = new HashMap<>();
+//        HashMap<Integer, dNodeData> cNodeMap = new HashMap<>();
+//        PriorityQueue<Integer> queue = new PriorityQueue<>();
+//        // Adds the src node to the queue
+//        NodeData srcNode = myGraph.getNode(src);
+//        queue.add(srcNode.getKey());
+//        //  holds the src with weight zero and puts it in the map
+//        dNodeData n = new dNodeData();
+//        cNodeMap.put(src, n);
+//        dNodeMap.put(src, cNodeMap);
+//        int tempSrc = src;
+//        // Looping while queue is not empty
+//        while (!queue.isEmpty()) {
+//            // Gets the node with the lowest weight from the priority queue
+////            NodeData node = queue.poll();
+//            // Loop over all the edges of this specific node
+//
+//            Iterator<EdgeData> iterator = myGraph.edgeIter(tempSrc);
+////            for (EdgeData edge : myGraph.edgeIter(Node.getKey())) {
+//            while (iterator.hasNext()) {
+//
+//                EdgeData next = iterator.next();
+//                // Calculate the weight sum by adding to the current weight of the edge to the previous sum weight
+//                double sumWeight = next.getWeight() + dNodeMap.get(next.getSrc()).get(next.getSrc()).getWeightSum();
+//                dNodeData temp = new dNodeData();
+//                temp.setWeightSum(sumWeight);
+//                cNodeMap.put(next.getDest(), temp);
+//                dNodeMap.put(next.getDest(), cNodeMap);
+////                int tempNode = queue.poll();
+//
+//
+//
+//
+////
+//            }
+//            if (queue.isEmpty()) {
+//                // need to be done - to check which veret's are connected to this node
+//                // and to add them to the queue
+//            tempSrc = queue.peek();
+//            }
+//
+//
+//        }
+//        // If the current node is equal to dest then return
+//        if (dest != null && node.getKey() == dest) {
+//            return;
+//        }
+//    }
     }
 }
-    }
 
 // to check if there's a path between 2 verts - DFS / BFS / something else
 
-private class dNodeData {
+class dNodeData {
     // The summed weight from src to this node
     private double weightSum;
     // The parent of this node from src
-    private Node nodeParent;
+    private int keyParent;
+    private int key;
 
     // Constructor //
     public dNodeData() {
-        this.nodeParent = null;
+        this.keyParent = -1;
         this.weightSum = 0;
     }
 
-    public void setNodeParent(Node nodeParent) {
-        this.nodeParent = nodeParent;
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
+    }
+
+    public void setNodeParent(int keyParent) {
+        this.keyParent = keyParent;
     }
 
     public void setWeightSum(double weightSum) {
@@ -200,8 +248,8 @@ private class dNodeData {
     }
 
 
-    public Node getNodeParent() {
-        return nodeParent;
+    public int getNodeParent() {
+        return keyParent;
     }
 
     public double getWeightSum() {
@@ -210,4 +258,4 @@ private class dNodeData {
 
 }
 
-}
+
