@@ -3,6 +3,9 @@ import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
 import com.google.gson.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
@@ -141,19 +144,92 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public boolean save(String file) {
-        Gson gson = new Gson();
-        String out = gson.toJson(myGraph.getNodes());
-        boolean result = false;
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.write(out);
-            writer.flush();
-            result = true;
+        JSONObject graph = new JSONObject();
+        JSONArray edges = new JSONArray();
+        JSONObject edge;
+        JSONArray nodes = new JSONArray();
+        JSONObject node;
+
+        boolean flag = false;
+
+        // saving the nodes of out graph
+        Iterator<NodeData> nodeIter = myGraph.nodeIter();
+        while (nodeIter.hasNext()){
+            NodeData nodeRunner = nodeIter.next();
+            node = toJson(nodeRunner);
+            nodes.put(node);
+
+            Iterator<EdgeData> edgeIter = myGraph.edgeIter(nodeRunner.getKey());
+            while (edgeIter.hasNext()){
+                EdgeData edgeRunner = edgeIter.next();
+                edgeRunner = edgeIter.next();
+                edge = toJson(edgeRunner);
+                edges.put(edge);
+            }
+        }
+
+        try{
+            graph.put("nodes", nodes);
+            graph.put("edges", edges);
+            graph.put("nodeAmount", myGraph.nodeSize());
+            graph.put("edgesAmount", myGraph.edgeSize());
+            graph.put("mc", myGraph.getMC());
+        }
+        catch (JSONException exception){
+            exception.printStackTrace();
+        }
+
+        try{
+            FileWriter g = new FileWriter(file);
+            g.write(graph.toString());
+            g.flush();
+            g.close();
+            flag = true;
         }
         catch (IOException e){
             e.printStackTrace();
         }
-        return result;
+        return flag;
+    }
+
+    /**
+     * JSON format save for the nodes
+     * @param node the current node
+     * @return json object
+     */
+    private JSONObject toJson(NodeData node){
+        JSONObject object = new JSONObject();
+        try {
+            object.put("key",node.getKey());
+            object.put("info",node.getInfo());
+            object.put("location",node.getLocation());
+            object.put("tag",node.getTag());
+            object.put("weight",node.getWeight());
+        }
+        catch (JSONException exception){
+            exception.printStackTrace();
+        }
+        return object;
+    }
+
+    /**
+     * JSON format save for the edges
+     * @param edge the current edge
+     * @return json object
+     */
+    private JSONObject toJson(EdgeData edge){
+        JSONObject object = new JSONObject();
+        try {
+            object.put("src",edge.getSrc());
+            object.put("dest",edge.getDest());
+            object.put("weight",edge.getWeight());
+            object.put("info",edge.getInfo());
+            object.put("tag",edge.getInfo());
+        }
+        catch (JSONException exception){
+            exception.printStackTrace();
+        }
+        return object;
     }
 
     /**
