@@ -42,7 +42,7 @@ class NodeTest {
         String s = node.getInfo();
         assertTrue(s.equals(""));
 
-    }
+//    }
 
     @Test
     void setInfo() {
