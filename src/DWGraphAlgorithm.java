@@ -18,6 +18,7 @@ import java.util.List;
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public DWGraph myGraph;
+    private HashMap<Integer, Node> dNodeMap; // map that holds info of the Dijkstra algo for each node
 
     /**
      * Inits the graph on which this set of algorithms operates on.
@@ -26,6 +27,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     @Override
     public void init(DirectedWeightedGraph g) {
         this.myGraph = (DWGraph) g;
+        this.dNodeMap = new HashMap<>();
     }
 
     /**
@@ -33,6 +35,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     public DWGraphAlgorithm(){
         this.myGraph = new DWGraph();
+        this.dNodeMap = new HashMap<>();
     }
 
     @Override
@@ -53,37 +56,104 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         else {
             int edgeSize = this.myGraph.edgeSize();
             int nodeSize = this.myGraph.nodeSize();
+            // if the number of edges equal to number of vertex*(vertex-1) than the graph is connected
             if (edgeSize == nodeSize * (nodeSize - 1)) return true;
             DWGraph temp = this.myGraph;
-            Node node = (Node) this.myGraph.getNode(0);
+            int key=0;
+            Iterator<Node> t= (Iterator<Node>) temp.getNodes();
+            //check which key is the first to start from
+            key=t.next().getKey();
+            Node node = (Node) this.myGraph.getNode(key);
             //painting the nodes to gray
             DFSConnect(temp, node);
-            Iterator<Node> i = (Iterator<Node>) temp.getNode(0);
-            //check if all the nodes is GRAY
-            while (i.hasNext()) {
+            Iterator<Node> i = (Iterator<Node>) temp.getNodes();
+            //check if all the nodes are GRAY
+            while (i.hasNext())
                 //if one of the nodes is not gray, the graph is not connected
-                if (i.next().getCurrent() != Color.GRAY) return false;
-            }
+                if (i.next().getColor() != Color.GRAY) return false;
             //transposing the graph
             temp = tran();
             DFSConnect(temp,node);
-            //check if all the nodes is GRAY again
-            i = (Iterator<Node>) temp.getNode(0);
+            //check if all the nodes are GRAY again
+            i = (Iterator<Node>) temp.getNode(key);
             while(i.hasNext())
                 //if one of the nodes is not gray, the transpose graph is not connected
-                if (i.next().getCurrent() != Color.GRAY) return false;
+                if (i.next().getColor() != Color.GRAY) return false;
         }
         return true;
     }
 
+    /**
+     * Computes the length of the shortest path between src to dest
+     * Note: if no such path --> returns -1
+     * @param src - start node
+     * @param dest - end (target) node
+     * @return the length of the shortest path
+     */
     @Override
     public double shortestPathDist(int src, int dest) {
+        if (myGraph == null || myGraph.getNode(src) == null || myGraph.getNode(dest) == null) {
+            return -1;
+        }
+        if (src == dest) {
+            return 0;
+        }
 
-        return 0;
+        return shortAssist(src, dest);
     }
 
     /**
-     * Computes the the shortest path between src to dest - as an ordered List of nodes:
+     * Dijkstra algo for finding the shortest path
+     * @param src the source node of the graph --> at each iteration
+     * @param dest the destination node of the graph --> at each iteration
+     * @return
+     */
+    private double shortAssist(int src, int dest) {
+        DWGraph graph = (DWGraph) myGraph;
+        Node curr = (Node) graph.getNode(src);
+
+        dNodeMap.put(src, curr);
+
+        // Looping on all the vertices
+        for (Iterator<NodeData> it = graph.nodeIter(); it.hasNext(); ) {
+            Node temp = (Node) it.next();
+            if (temp.getKey() != src) {
+                // set all the others nodes to be infinity
+                temp.setWeight(Double.POSITIVE_INFINITY);
+                temp.setTag(-1);
+                temp.setInfo("Not visited");
+            }
+        }
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.add(curr);
+        while (!pq.isEmpty()) {
+            Iterator<EdgeData> edge = graph.edgeIter(curr.getKey());
+            while (edge.hasNext() && pq.peek().getInfo() != "Visited") { // new condition
+                EData next = (EData) edge.next();
+                if (curr.getKey() != next.getDest()) {
+                    double sumWeight = next.getWeight() + dNodeMap.get(next.getSrc()).getWeight();
+                    //check if the weight is smaller than current weight
+                    if (graph.getNode(next.getDest()).getWeight() > sumWeight) {
+                        //init the node weight
+                        graph.getNode(next.getDest()).setWeight(sumWeight);
+                        // init the node parent
+                        graph.getNode(next.getDest()).setTag(next.getSrc());
+                        dNodeMap.put(next.getDest(), curr);
+                    }
+
+                    pq.add((Node) graph.getNode(next.getDest()));
+                }
+            }
+            graph.getNode(pq.peek().getKey()).setInfo("Visited");
+            pq.poll();
+            curr = pq.peek();
+        }
+        double ans = graph.getNode(dest).getWeight();
+        return ans;
+    }
+
+    /**
+     * Computes the shortest path between src to dest - as an ordered List of nodes:
      * src--> n1-->n2-->...dest
      * if no such path --> returns null;
      * @param src - start node
@@ -92,12 +162,22 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        return null;
+        shortestPathDist(src, dest);
+        List<NodeData> ans = new ArrayList<>();
+        ans.add(myGraph.getNode(dest));
+        int index = dest;
+        while (index != src) {
+            ans.add(dNodeMap.get(index));
+            index = dNodeMap.get(index).getKey();
+        }
+        Collections.reverse(ans);
+        return ans;
+
     }
 
     /**
      * Finds the NodeData which minimizes the max distance to all the other nodes.
-     * Assuming the graph isConnected, elese return null.
+     * Assuming the graph isConnected, else return null.
      * @return the Node data to which the max shortest path to all the other nodes is minimized.
      */
     @Override
@@ -106,31 +186,37 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             return null;
         // the first node of the graph
         Iterator<NodeData> node = myGraph.nodeIter();
-        double maximumValue = Double.MAX_VALUE;
-        int compare = 0;
+        double minimum = Double.MAX_VALUE;
+        int compare = -1;
         // go through all the nodes starting at the first
         while (node.hasNext()){
             NodeData first = node.next();
-            double minimumValue = 0;
+            double maximum = 0;
             Iterator<NodeData> current = myGraph.nodeIter();
             // this while is for check the first one with all the others' node at each run
             while (current.hasNext()){
                 NodeData second = current.next();
-                if (myGraph.getEdge(first.getKey(), second.getKey()) != null){
-                    if (myGraph.getEdge(first.getKey(), second.getKey()).getWeight() > minimumValue)
-                        minimumValue = myGraph.getEdge(first.getKey(), second.getKey()).getWeight();
+                // maybe need to compare the first to the second or delete ?
+                if (myGraph.getEdge(first.getKey(), second.getKey()) != null && first.getKey() != second.getKey()){
+                    if (myGraph.getEdge(first.getKey(), second.getKey()).getWeight() > maximum)
+                        maximum = myGraph.getEdge(first.getKey(), second.getKey()).getWeight();
                 }
             }
-            if(maximumValue > minimumValue){
-                maximumValue = minimumValue;
+            if(minimum > maximum){
+                minimum = maximum;
                 compare = first.getKey();
             }
-            if(compare != 0)
+            if(compare >= 0)
                 return myGraph.getNode(compare);
         }
         return null;
     }
 
+    /**
+     * Computes a list of consecutive nodes which go over all the nodes in cities.
+     * the sum of the weights of all the consecutive (pairs) of nodes (directed) is the "cost" of the solution -
+     * the lower the better.
+     */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
         return null;
@@ -283,13 +369,13 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         return flag;
     }
 
-    public int DFS() {
+    private int DFS() {
         DWGraph temp=this.myGraph;
         int count = 0;
         Iterator<NodeData> i = temp.nodeIter();
         while (i.hasNext()) {
             Node node = (Node) i;
-            if (node.getCurrent() == Color.WHITE) {
+            if (node.getColor() == Color.WHITE) {
                 count++;
                 DFS_visit(temp, node);
             }
@@ -297,34 +383,34 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         return count;
     }
 
-    public void DFS_visit(DWGraph graph, Node n) {
-        n.setCurrent(Color.GRAY);
+    private void DFS_visit(DWGraph graph, Node n) {
+        n.setColor(Color.GRAY);
         Iterator<EdgeData> i = graph.edgeIter(n.getKey());
         while (i.hasNext()) {
             EdgeData edge = i.next();
             Node v = (Node) graph.getNode(edge.getDest());
-            if (v.getCurrent() == Color.WHITE) {
+            if (v.getColor() == Color.WHITE) {
                 DFS_visit(graph, v);
             }
         }
-        n.setCurrent(Color.BLACK);
+        n.setColor(Color.BLACK);
     }
 
-    public void DFSConnect(DWGraph g, Node node) {
-        node.setCurrent(Color.GRAY);
+    private void DFSConnect(DWGraph g, Node node) {
+        node.setColor(Color.GRAY);
         Iterator<EdgeData> i = g.edgeIter(node.getKey());
         //running on all the edges
         while (i.hasNext()) {
             EdgeData edge = i.next();
             //check if we didn't pass this node
-            if (node.getCurrent() == Color.WHITE) {
-                Node v = (Node) g.getNode(edge.getDest());
+            Node v = (Node) g.getNode(edge.getDest());
+            if (v.getColor() == Color.WHITE) {
                 DFSConnect(g, v);
             }
         }
     }
 
-    public DWGraph tran() {
+    private DWGraph tran() {
         DWGraph ans = new DWGraph();
         Iterator<NodeData> i = this.myGraph.nodeIter();
         //add the all nodes to the ans graph
