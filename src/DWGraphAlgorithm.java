@@ -50,22 +50,26 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         else {
             int edgeSize = this.myGraph.edgeSize();
             int nodeSize = this.myGraph.nodeSize();
+            // if the number of edges equal to number of vertex*(vertex-1) than the graph is connected
             if (edgeSize == nodeSize * (nodeSize - 1)) return true;
             DWGraph temp = this.myGraph;
-            Node node = (Node) this.myGraph.getNode(0);
+            int key=0;
+            Iterator<Node> t= (Iterator<Node>) temp.getNodes();
+            //check which key is the first to start from
+            key=t.next().getKey();
+            Node node = (Node) this.myGraph.getNode(key);
             //painting the nodes to gray
             DFSConnect(temp, node);
-            Iterator<Node> i = (Iterator<Node>) temp.getNode(0);
-            //check if all the nodes is GRAY
-            while (i.hasNext()) {
+            Iterator<Node> i = (Iterator<Node>) temp.getNodes();
+            //check if all the nodes are GRAY
+            while (i.hasNext())
                 //if one of the nodes is not gray, the graph is not connected
                 if (i.next().getCurrent() != Color.GRAY) return false;
-            }
             //transposing the graph
             temp = tran();
             DFSConnect(temp,node);
-            //check if all the nodes is GRAY again
-            i = (Iterator<Node>) temp.getNode(0);
+            //check if all the nodes are GRAY again
+            i = (Iterator<Node>) temp.getNode(key);
             while(i.hasNext())
                 //if one of the nodes is not gray, the transpose graph is not connected
                 if (i.next().getCurrent() != Color.GRAY) return false;
@@ -189,8 +193,8 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         while (i.hasNext()) {
             EdgeData edge = i.next();
             //check if we didn't pass this node
-            if (node.getCurrent() == Color.WHITE) {
-                Node v = (Node) g.getNode(edge.getDest());
+            Node v = (Node) g.getNode(edge.getDest());
+            if (v.getCurrent() == Color.WHITE) {
                 DFSConnect(g, v);
             }
         }
@@ -210,6 +214,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             Iterator<EdgeData> edge = this.myGraph.edgeIter(node.getKey());
             while (edge.hasNext()) {
                 EData e = (EData) edge.next();
+                //reverse the direction
                 ans.connect(e.getDest(), e.getSrc(), e.getWeight());
             }
         }
