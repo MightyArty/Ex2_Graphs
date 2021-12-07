@@ -249,7 +249,8 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             int curr = cities.get(index).getKey();
             //running in circle between the cities and checking which is the best travel
             List<NodeData> temp = shortestPath(curr, curr);
-            double max = this.dNodeMap.get(curr).getWeight(); // the weight of the travel
+            int tempParent= this.dNodeMap.get(curr).getKey();
+            double max = this.dNodeMap.get(tempParent).getWeight(); // the weight of the travel
             if (min > max) {
                 min = max;
                 ans = temp;
