@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import java.util.TreeSet;
+
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public DWGraph myGraph;
@@ -219,7 +221,46 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        return null;
+        DWGraphAlgorithm algo = new DWGraphAlgorithm();
+        for (int i = 0; i < cities.size(); i++) {
+            int index = cities.get(i).getKey();
+            algo.getGraph().addNode(cities.get(index));
+        }
+
+        // still need to get the src and dest
+        DWGraph graph = new DWGraph();
+        for(int i = 0 ; i < cities.size() ; i++){
+            int index = cities.get(i).getKey();
+            double w = graph.getNode(index).getWeight();
+            NodeData node = graph.getNode(index);
+            graph.addNode(node);
+        }
+
+        //check if the graph is connected
+        if (!algo.isConnected()) return null;
+        List<NodeData> ans = new LinkedList<>();
+        //if cities size is one
+        if (cities.size() == 1) {
+            ans.add(cities.get(0));
+            return ans;
+        }
+        double min = Integer.MAX_VALUE;
+        int size = 0;
+        int index = 0;
+        //running all over the nodes in the algo.graph(cities nodes)
+        while (cities.size() > size) {
+            int curr = cities.get(index).getKey();
+            //running in circle between the cities and checking which is the best travel
+            List<NodeData> temp = shortestPath(curr, curr);
+            double max = this.dNodeMap.get(curr).getWeight(); // the weight of the travel
+            if (min > max) {
+                min = max;
+                ans = temp;
+            }
+            index++;
+            size++;
+        }
+        return ans;
     }
 
     /**
