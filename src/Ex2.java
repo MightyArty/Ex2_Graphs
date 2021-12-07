@@ -1,13 +1,14 @@
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import org.json.JSONArray;
+import api.EdgeData;
+import api.NodeData;
+import com.google.gson.*;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.*;
+import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
+import java.util.Iterator;
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
@@ -27,7 +28,8 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraph getGraph(String json_file) {
-        return null;
+        DirectedWeightedGraph ans = loadFromJson (json_file);
+        return ans;
     }
     /**
      * This static function will be used to test your implementation
@@ -35,10 +37,9 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraphAlgorithms getGraphAlgo(String json_file) {
-        DirectedWeightedGraphAlgorithms ans = null;
-        // ****** Add your code here ******
-        //
-        // ********************************
+        DirectedWeightedGraph graph = loadFromJson(json_file);
+        DirectedWeightedGraphAlgorithms ans = new DWGraphAlgorithm();
+        ans.init(graph);
         return ans;
     }
     /**
@@ -48,13 +49,48 @@ public class Ex2 {
      */
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGraphAlgo(json_file);
-        // ****** Add your code here ******
-        //
-        // ********************************
+        // need to build gui class
     }
 
-    private static JSONObject parseJSON(String json_file) throws JSONException, IOException{
-        String out = new String(Files.readAllBytes(Paths.get(json_file)));
-        return new JSONObject(out);
+    /**
+     * for loading the json file
+     * @param file given json file
+     * @return a new graph
+     */
+    private static DWGraph loadFromJson(String file){
+        DWGraph graph = new DWGraph();
+        JSONParser p = new JSONParser();
+        try {
+            JSONObject object = (JSONObject) p.parse(new FileReader(file));
+            JSONArray nodes = (JSONArray) object.get("Nodes");
+            JSONArray edges = (JSONArray) object.get("Edges");
+            for(int i = 0 ; i < nodes.size(); i++){
+                JSONObject current = (JSONObject) nodes.get(i);
+                String pos = current.get("pos").toString();
+                String id = current.get("id").toString();
+                NodeData node = new Node(Integer.parseInt(id), pos);
+                graph.addNode(node);
+            }
+
+            for(int i = 0 ; i < edges.size() ; i++){
+                JSONObject current = (JSONObject) edges.get(i);
+                if((current.get("w") != null) && (current.get("src") != null) && (current.get("dest") != null)){
+                    int src = Integer.parseInt(current.get("src").toString());
+                    int dest = Integer.parseInt(current.get("dest").toString());
+                    double weight = Double.parseDouble(current.get("w").toString());
+                    graph.connect(src,dest,weight);
+                }
+            }
+        }
+        catch (IOException | ParseException e){
+            e.printStackTrace();
+        }
+        return graph;
+    }
+
+    public static void main(String[] args) {
+
+        DWGraph graph = loadFromJson("/Users/valhalla/IdeaProjects/Ex2_Graphs/src/G1.json");
+        System.out.println(graph.getEdge(0,16).toString());
     }
 }
