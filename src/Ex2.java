@@ -1,10 +1,14 @@
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
+import api.EdgeData;
+import api.NodeData;
 import com.google.gson.*;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.*;
+import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
+import java.util.Iterator;
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
@@ -24,7 +28,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraph getGraph(String json_file) {
-        DirectedWeightedGraph ans = loadFromJSON(json_file);
+        DirectedWeightedGraph ans = loadFromJson (json_file);
         return ans;
     }
     /**
@@ -33,7 +37,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraphAlgorithms getGraphAlgo(String json_file) {
-        DirectedWeightedGraph graph = loadFromJSON(json_file);
+        DirectedWeightedGraph graph = loadFromJson(json_file);
         DirectedWeightedGraphAlgorithms ans = new DWGraphAlgorithm();
         ans.init(graph);
         return ans;
@@ -53,44 +57,40 @@ public class Ex2 {
      * @param file given json file
      * @return a new graph
      */
-    private static DWGraph loadFromJSON(String file) {
+    private static DWGraph loadFromJson(String file){
         DWGraph graph = new DWGraph();
+        JSONParser p = new JSONParser();
         try {
-            JsonElement element = JsonParser.parseReader(new FileReader(file));
-            JsonObject object = element.getAsJsonObject();
-            JsonArray nodes = object.get("Nodes").getAsJsonArray();
-            JsonArray edges = object.get("Edges").getAsJsonArray();
-            for (int i = 0; i < edges.size(); i++) {
-                JsonObject e = new Gson().fromJson(edges.get(i), JsonObject.class);
-                String first = e.get("src").getAsString();
-                String second = e.get("dest").getAsString();
-                String third = e.get("w").getAsString();
-                int src = Integer.parseInt(first);
-                int dest = Integer.parseInt(second);
-                double weight = Integer.parseInt(third);
-                graph.connect(src, dest, weight);
-            }
-            for (int i = 0; i < nodes.size(); i++) {
-                JsonObject n = new Gson().fromJson(nodes.get(i), JsonObject.class);
-                String position = n.get("pos").getAsString();
-                String[] positionArr = position.split(",");
-                double[] arr = new double[3];
-                for (int k = 0; k < positionArr.length; k++) {
-                    arr[k] = Double.parseDouble(positionArr[k]);
-                }
-                String id = n.get("id").getAsString();
-                double x = arr[0];
-                double y = arr[1];
-                double z = arr[2];
-                int actualID = Integer.parseInt(id);
-                Node newNode = new Node(x, y, z, actualID);
-                graph.addNode(newNode);
+            JSONObject object = (JSONObject) p.parse(new FileReader(file));
+            JSONArray nodes = (JSONArray) object.get("Nodes");
+            JSONArray edges = (JSONArray) object.get("Edges");
+            for(int i = 0 ; i < nodes.size(); i++){
+                JSONObject current = (JSONObject) nodes.get(i);
+                String pos = current.get("pos").toString();
+                String id = current.get("id").toString();
+                NodeData node = new Node(Integer.parseInt(id), pos);
+                graph.addNode(node);
             }
 
+            for(int i = 0 ; i < edges.size() ; i++){
+                JSONObject current = (JSONObject) edges.get(i);
+                if((current.get("w") != null) && (current.get("src") != null) && (current.get("dest") != null)){
+                    int src = Integer.parseInt(current.get("src").toString());
+                    int dest = Integer.parseInt(current.get("dest").toString());
+                    double weight = Double.parseDouble(current.get("w").toString());
+                    graph.connect(src,dest,weight);
+                }
+            }
         }
-        catch (FileNotFoundException e){
+        catch (IOException | ParseException e){
             e.printStackTrace();
         }
         return graph;
+    }
+
+    public static void main(String[] args) {
+
+        DWGraph graph = loadFromJson("/Users/valhalla/IdeaProjects/Ex2_Graphs/src/G1.json");
+        System.out.println(graph.getEdge(0,16).toString());
     }
 }

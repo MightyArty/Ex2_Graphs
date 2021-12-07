@@ -12,12 +12,16 @@ import java.util.*;
 public class DWGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> nodes;
     private HashMap<Vector<Integer>, EdgeData> edges;   // vector --> (src,dest)
+    private HashMap<Integer, HashMap<Integer, EdgeData>> newEdges;
+    private HashMap<Integer, HashMap<Integer, EdgeData>> reversedEdges;
     private int edgeSize;
     private int mc;
 
-    public DWGraph(DirectedWeightedGraph graph){
-        nodes = new HashMap<>();
-        edges = new HashMap<>();
+    public DWGraph(DWGraph graph){
+        nodes = graph.nodes;
+        edges = graph.edges;
+        newEdges = graph.newEdges;
+        reversedEdges = graph.reversedEdges;
     }
 
     /**
@@ -26,6 +30,8 @@ public class DWGraph implements DirectedWeightedGraph {
     public DWGraph(){
         this.nodes = new HashMap<>();  // new node map
         this.edges = new HashMap<>();   // new edges map
+        this.newEdges = new HashMap<>();
+        this.reversedEdges = new HashMap<>();
         this.edgeSize = 0;
         this.mc = 0;
     }
@@ -53,18 +59,23 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public EdgeData getEdge(int src, int dest) {
-        if(!nodes.containsKey(src) || !nodes.containsKey(dest) || src == dest)
+        if(newEdges.get(src).get(dest) == null || src == dest)
             throw new RuntimeException("There is no source or destination or the source is equal to destination so put a right data!");
-        Vector<Integer> v = new Vector<>(src,dest);
-        return edges.get(v);
+        EdgeData ans = newEdges.get(src).get(dest);
+        return ans;
     }
+
 
     public HashMap<Integer, NodeData> getNodes(){
         return nodes;
     }
 
-    public HashMap<Vector<Integer>, EdgeData> getEdges(){
-        return edges;
+    public HashMap<Integer, HashMap<Integer, EdgeData>> getNewEdges(){
+        return newEdges;
+    }
+
+    public HashMap<Integer, HashMap<Integer, EdgeData>> getReversedEdges(){
+        return reversedEdges;
     }
 
     /**
@@ -92,13 +103,13 @@ public class DWGraph implements DirectedWeightedGraph {
         if(!this.nodes.containsKey(src) || !this.nodes.containsKey(dest) || src == dest || w < 0)
             return;
         EdgeData edge = new EData(src, dest, w);
-        Vector<Integer> v = new Vector<>(src,dest);
-        edges.remove(v);    //דריסה
-        edges.put(v,edge);
-        Node node = (Node) nodes.get(src);
-        node.addFromSRC(dest,edge); // map from the src
-        node = (Node) nodes.get(dest);
-        node.addToDEST(src,edge);   // map from the dest
+        HashMap<Integer, EdgeData> temp = new HashMap<>();
+        temp.put(dest,edge);
+        newEdges.put(src,temp);
+
+        HashMap<Integer, EdgeData> temp2 = new HashMap<>();
+        temp.put(src,edge);
+        newEdges.put(dest,temp2);
         this.edgeSize ++;
         this.mc ++;
     }
@@ -109,8 +120,9 @@ public class DWGraph implements DirectedWeightedGraph {
     }
 
     @Override
-    public Iterator<EdgeData> edgeIter() {
-        return this.edges.values().iterator();
+    public Iterator<EdgeData> edgeIter(){
+        Iterator edge = newEdges.values().iterator();
+        return edge;
     }
 
     /**
@@ -120,8 +132,7 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        Node node = (Node) nodes.get(node_id);
-        return node.getToDESTIter();    // maybe need to fix
+         return newEdges.get(node_id).values().iterator();
     }
 
     /**
@@ -136,44 +147,50 @@ public class DWGraph implements DirectedWeightedGraph {
         if(!this.nodes.containsKey(key))
             throw new RuntimeException("The graph does not contain this vertex!");
         Node vertex = (Node) nodes.remove(key);
-        Iterator<EdgeData> i = vertex.getFromSRCIter();
+        HashMap<Integer, EdgeData> regular = newEdges.get(key); //3
+        HashMap<Integer, EdgeData> reversed = reversedEdges.get(key);
+        Iterator<EdgeData> i = regular.values().iterator();
+        Iterator<EdgeData> k = reversed.values().iterator();
         while (i.hasNext()){
-            EdgeData runner = i.next();
-            Vector<Integer> v = new Vector<>(runner.getSrc(), runner.getDest());
-            edges.remove(v);
-            this.edgeSize --;
-            Node src = (Node) nodes.get(runner.getSrc());
-            src.removeSRC(runner.getSrc());
+            EdgeData runner = i.next(); //1
+            EdgeData eData = regular.remove(runner.getDest()); //delete of the src 1->2
+            reversedEdges.get(eData.getDest()).remove(eData.getSrc());
+            edgeSize --;
         }
 
-        i = vertex.getToDESTIter();
-        while (i.hasNext()){
-            EdgeData runner = i.next();
-            Vector<Integer> v = new Vector<>(runner.getSrc(), runner.getDest());
-            edges.remove(v);
-            this.edgeSize --;
-            Node dest = (Node) nodes.get(runner.getDest());
-            dest.removeDEST(runner.getDest());
+        while (k.hasNext()){
+            EdgeData runner = k.next();
+            EdgeData eData = reversed.remove(runner.getSrc());
+            newEdges.get(eData.getSrc()).remove(eData.getDest());
+            edgeSize --;
+
         }
         this.mc ++;
         return vertex;
     }
 
-//    @Override
+    /**
+     * Deletes the edge from the graph,
+     * Note: this method should run in O(1) time.
+     * @param src
+     * @param dest
+     * @return the data of the removed edge (null if none).
+     */
+    @Override
     public EdgeData removeEdge(int src, int dest) {
-        Node vertex = (Node) nodes.get(dest);
-        vertex.removeSRC(src);
-        vertex = (Node) nodes.get(src);
-        vertex.removeDEST(dest);
-        Vector <Integer> v = new Vector<>(src,dest);
+        if(src == dest || newEdges.get(src).get(dest) == null)
+            return null;
+
+        EdgeData ans = newEdges.get(src).remove(dest);
+        reversedEdges.get(dest).remove(src);
         this.mc ++;
         this.edgeSize --;
-        return edges.remove(v);
+        return ans;
     }
 
     @Override
     public int nodeSize() {
-        return this.nodeSize();
+        return this.nodes.size();
     }
 
     @Override
@@ -184,10 +201,5 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public int getMC() {
         return this.mc;
-    }
-
-    private static JSONObject parseJSON(String json_file) throws JSONException, IOException{
-        String out = new String(Files.readAllBytes(Paths.get(json_file)));
-        return new JSONObject(out);
     }
 }
