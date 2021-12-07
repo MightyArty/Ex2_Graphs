@@ -87,7 +87,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     /**
      * Computes the length of the shortest path between src to dest
-     * Note: if no such path --> returns -1
+     * Note: if no such path --> returns  -1
      * @param src - start node
      * @param dest - end (target) node
      * @return the length of the shortest path
