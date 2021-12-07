@@ -222,18 +222,32 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
         DWGraphAlgorithm algo = new DWGraphAlgorithm();
+        // init the graph with data from cities list
         for (int i = 0; i < cities.size(); i++) {
             int index = cities.get(i).getKey();
             algo.getGraph().addNode(cities.get(index));
         }
 
-        // still need to get the src and dest
-        DWGraph graph = new DWGraph();
-        for(int i = 0 ; i < cities.size() ; i++){
-            int index = cities.get(i).getKey();
-            double w = graph.getNode(index).getWeight();
-            NodeData node = graph.getNode(index);
-            graph.addNode(node);
+        Iterator<EdgeData> iterator = algo.getGraph().edgeIter();
+        while (iterator.hasNext()){
+            int counter = 0;
+            int index = 0;
+            EdgeData runner = iterator.next();
+            int src = runner.getSrc();
+            int dest = runner.getDest();
+            double weight = runner.getWeight();
+            List<NodeData> temp = cities;
+
+            while (!temp.isEmpty()){
+                int key = temp.get(index).getKey();
+                if (key == src || key == dest) {
+                    counter++;
+                }
+                temp.remove(index);
+                index++;
+            }
+            if(counter == 2)
+                algo.getGraph().connect(src,dest,weight);
         }
 
         //check if the graph is connected

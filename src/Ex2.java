@@ -24,8 +24,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraph getGraph(String json_file) {
-        DirectedWeightedGraph ans = new DWGraph();
-        ans = loadFromJSON(json_file);
+        DirectedWeightedGraph ans = loadFromJSON(json_file);
         return ans;
     }
     /**
