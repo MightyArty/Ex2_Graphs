@@ -15,7 +15,7 @@ public class Node implements NodeData, Serializable {
     private double weight;
     private String info;
     private Location location;
-    private Color current;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
+    private Color color;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
     private HashMap<Integer, EdgeData> fromSRC; //hash map representing the start of path
     private HashMap<Integer, EdgeData> toDEST;  //hash map representing the end of path
 
@@ -36,7 +36,7 @@ public class Node implements NodeData, Serializable {
         this.info = node.getInfo();
         this.fromSRC = new HashMap<>();
         this.toDEST = new HashMap<>();
-        this.current = Color.WHITE;
+        this.color = Color.WHITE;
     }
 
     /**
@@ -104,16 +104,16 @@ public class Node implements NodeData, Serializable {
      * getter to the color of the Node
      * @return the current color (White in start)
      */
-    public Color getCurrent() {
-        return current;
+    public Color getColor() {
+        return color;
     }
 
     /**
      * set new color for the node
-     * @param current new color of the new node
+     * @param color new color of the new node
      */
-    public void setCurrent(Color current) {
-        this.current = current;
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     /**
@@ -189,5 +189,13 @@ public class Node implements NodeData, Serializable {
         if(p == null)
             this.location = new Location();
         else this.location = new Location(p);
+    }
+
+    @Override
+    public String toString(){
+        String res = "Node(" + "location=" + this.location + ",weight=" + this.weight + ",key=" + this.key +
+        ",info=" + this.info + ",tag=" + this.tag + ",fromSRC=" + this.fromSRC + ",toDEST=" + this.toDEST +
+        ",color=" + this.color + ')' + "\n";
+        return res;
     }
 }
