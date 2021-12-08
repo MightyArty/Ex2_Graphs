@@ -7,11 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
@@ -125,6 +127,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
                 temp.setInfo("Not visited");
             }
         }
+        curr.setInfo("Not visited");
         Queue<NodeData> pq = new ArrayDeque<>();
         pq.add(curr);
         while (!pq.isEmpty()) {
@@ -189,36 +192,32 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public NodeData center() {
-
         if (!isConnected())
             return null;
-
-        // the first node of the graph
-        Iterator<NodeData> node = myGraph.nodeIter();
-        double minimum = Double.MAX_VALUE;
-        int compare = -1;
-        // go through all the nodes starting at the first
-        while (node.hasNext()) {
-            NodeData first = node.next();
-            double maximum = 0;
-            //   Iterator<NodeData> current = myGraph.nodeIter();
-            // this while is for check the first one with all the others' node at each run
-            while (node.hasNext()) {
-                NodeData second = node.next();
-                // maybe need to compare the first to the second or delete ?
-                if (myGraph.getEdge(first.getKey(), second.getKey()) != null && first.getKey() != second.getKey()) {
-                    if (myGraph.getEdge(first.getKey(), second.getKey()).getWeight() > maximum)
-                        maximum = myGraph.getEdge(first.getKey(), second.getKey()).getWeight();
-                }
+        double min = Double.MAX_VALUE;
+        // System.out.println(min);
+        DirectedWeightedGraph graph = this.myGraph;
+        Iterator<NodeData> i = myGraph.nodeIter();
+        NodeData ans = i.next();
+        while(i.hasNext()) {
+            double max = 0;
+            int ansTemp = ans.getKey();
+            Iterator<NodeData> k = myGraph.nodeIter();
+            while (k.hasNext()) {
+                NodeData temp = k.next();
+                if(ansTemp!=temp.getKey())
+                    //   System.out.println(ansTemp+" ,  " +temp.getKey());
+                    max+=shortestPathDist(ansTemp, temp.getKey());;
             }
-            if (minimum > maximum) {
-                minimum = maximum;
-                compare = first.getKey();
+            if (min > max) {
+                ans = myGraph.getNode(ansTemp);
+                min = max;
             }
-            if (compare >= 0)
-                return myGraph.getNode(compare);
+            if(i.hasNext())
+                ans= i.next();
         }
-        return null;
+        //this.myGraph=tempG;
+        return ans;
     }
 
     /**
