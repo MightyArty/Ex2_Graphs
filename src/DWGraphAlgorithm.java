@@ -132,16 +132,18 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             while (edge.hasNext() && pq.peek().getInfo() != "Visited") { // new condition
                 EdgeData next = edge.next();
                 if (curr.getKey() != next.getDest()) {
-                    double sumWeight = next.getWeight() + dNodeMap.get(next.getSrc()).getWeight();
+                    double sumWeight = next.getWeight() + graph.getNode(next.getSrc()).getWeight();
                     //check if the weight is smaller than current weight
                     if (graph.getNode(next.getDest()).getWeight() > sumWeight) {
                         //init the node weight
                         graph.getNode(next.getDest()).setWeight(sumWeight);
+                        //dNodeMap.get(next.getSrc()).setWeight(sumWeight);
                         // init the node parent
                         graph.getNode(next.getDest()).setTag(next.getSrc());
+                        dNodeMap.get(next.getSrc()).setTag(next.getSrc());
                         dNodeMap.put(next.getDest(), curr);
                     }
-                    NodeData t = myGraph.getNode(next.getDest());
+                    NodeData t = graph.getNode(next.getDest());
                     if(t.getInfo()!="Visited")
                     pq.add(graph.getNode(next.getDest()));
                 }
@@ -150,7 +152,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             pq.poll();
             curr = pq.peek();
         }
-        System.out.println(this.dNodeMap);
+       // System.out.println(this.dNodeMap);
         double ans = graph.getNode(dest).getWeight();
         return ans;
     }
@@ -166,7 +168,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        shortestPathDist(src, dest);
+        if(shortestPathDist(src, dest)==-1)return null;
         List<NodeData> ans = new ArrayList<>();
         ans.add(myGraph.getNode(dest));
         int index = dest;
@@ -199,10 +201,10 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         while (node.hasNext()) {
             NodeData first = node.next();
             double maximum = 0;
-            Iterator<NodeData> current = myGraph.nodeIter();
+            //   Iterator<NodeData> current = myGraph.nodeIter();
             // this while is for check the first one with all the others' node at each run
-            while (current.hasNext()) {
-                NodeData second = current.next();
+            while (node.hasNext()) {
+                NodeData second = node.next();
                 // maybe need to compare the first to the second or delete ?
                 if (myGraph.getEdge(first.getKey(), second.getKey()) != null && first.getKey() != second.getKey()) {
                     if (myGraph.getEdge(first.getKey(), second.getKey()).getWeight() > maximum)
