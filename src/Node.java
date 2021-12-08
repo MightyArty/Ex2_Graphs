@@ -140,6 +140,6 @@ public class Node implements NodeData, Serializable {
 
     @Override
     public String toString(){
-        return "Node{" + "key= " + this.key + ",location= " + location + ", tag= " + tag + ", weight= " + weight + ", info= " + info  + "}";
+        return "Node{" + "key= " + this.key + ",location= " + location + ", tag= " + tag + ", weight= " + weight + ", info= " + info  + "}" + "\n";
     }
 }

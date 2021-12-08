@@ -48,22 +48,28 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         return copy;
     }
 
+    /**
+     * Returns true if and only if (iff) there is a valid path from each node to each
+     * other node. NOTE: assume directional graph (all n*(n-1) ordered pairs).
+     * @return
+     */
     @Override
     public boolean isConnected() {
 //        if (DFS() > 1) {// There is more than one component
 //            System.out.println(DFS());
 //            return false;
 //        } else {
-        int edgeSize = this.myGraph.edgeSize();
-        int nodeSize = this.myGraph.nodeSize();
+        DirectedWeightedGraph graph = copy();
+        int edgeSize = graph.edgeSize();
+        int nodeSize = graph.nodeSize();
         // if the number of edges equal to number of vertex*(vertex-1) than the graph is connected
         if (edgeSize == nodeSize * (nodeSize - 1)) return true;
-        DirectedWeightedGraph temp = this.myGraph;
+        DirectedWeightedGraph temp = graph;
         int key = 0;
         Iterator<NodeData> t = temp.nodeIter();
         //check which key is the first to start from
         key = t.next().getKey();
-        Node node = (Node) this.myGraph.getNode(key);
+        Node node = (Node) graph.getNode(key);
         //painting the nodes to gray
         DFSConnect(temp, node);
         Iterator<NodeData> i = temp.nodeIter();
@@ -79,7 +85,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         while (i.hasNext())
             //if one of the nodes is not gray, the transpose graph is not connected
             if (i.next().getTag() != 1) return false;
-
         return true;
     }
 
@@ -99,18 +104,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         if (src == dest) {
             return 0;
         }
-
-        return shortAssist(src, dest);
-    }
-
-    /**
-     * Dijkstra algo for finding the shortest path
-     *
-     * @param src  the source node of the graph --> at each iteration
-     * @param dest the destination node of the graph --> at each iteration
-     * @return
-     */
-    private double shortAssist(int src, int dest) {
         DirectedWeightedGraph graph = new DWGraph((DWGraph) this.myGraph);
         NodeData curr = graph.getNode(src);
         curr.setWeight(0);
@@ -142,7 +135,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
                         //dNodeMap.get(next.getSrc()).setWeight(sumWeight);
                         // init the node parent
                         graph.getNode(next.getDest()).setTag(next.getSrc());
-                        dNodeMap.get(next.getSrc()).setTag(next.getSrc());
+//                        dNodeMap.get(next.getSrc()).setTag(next.getSrc());
                         dNodeMap.put(next.getDest(), curr);
                     }
                     NodeData t = graph.getNode(next.getDest());
@@ -198,7 +191,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
        // System.out.println(min);
         DirectedWeightedGraph graph = this.myGraph;
         Iterator<NodeData> i = myGraph.nodeIter();
-        NodeData ans = new Node(graph.getNode(0));
+        NodeData ans = new Node();
         while(i.hasNext()) {
             NodeData t= i.next();
             double max = 0;
@@ -231,60 +224,44 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        DWGraphAlgorithm algo = new DWGraphAlgorithm();
-        // init the graph with data from cities list
-        for (int i = 0; i < cities.size(); i++) {
-            int index = cities.get(i).getKey();
-            algo.getGraph().addNode(cities.get(index));
-        }
-
-//        Iterator<EdgeData> iterator = algo.getGraph().edgeIter();
-//        while (iterator.hasNext()) {
-//            int counter = 0;
-//            int index = 0;
-//            EdgeData runner = iterator.next();
-//            int src = runner.getSrc();
-//            int dest = runner.getDest();
-//            double weight = runner.getWeight();
-//            List<NodeData> temp = cities;
-//
-//            while (!temp.isEmpty()) {
-//                int key = temp.get(index).getKey();
-//                if (key == src || key == dest) {
-//                    counter++;
-//                }
-//                temp.remove(index);
-//                index++;
-//            }
-//            if (counter == 2)
-//                algo.getGraph().connect(src, dest, weight);
-//        }
-
-        //check if the graph is connected
-        if (!isConnected()) return null;
         List<NodeData> ans = new LinkedList<>();
         //if cities size is one
         if (cities.size() == 1) {
             ans.add(cities.get(0));
             return ans;
-        }
-        double min = Integer.MAX_VALUE;
-        int size = 0;
-        int index = 0;
-        //running all over the nodes in the algo.graph(cities nodes)
-        while (cities.size() > size) {
-            int curr = cities.get(index).getKey();
-            //running in circle between the cities and checking which is the best travel
-            List<NodeData> temp = shortestPath(curr, curr);
-            double max = this.dNodeMap.get(curr).getWeight(); // the weight of the travel
-            if (min > max) {
-                min = max;
-                ans = temp;
+        }//v
+
+        double min = Double.MAX_VALUE;
+        Iterator<NodeData> iterator = cities.iterator();
+        while (iterator.hasNext()){
+            NodeData current = iterator.next();
+            double max = 0;
+            int ansTemp = current.getKey();
+            Iterator<NodeData> runner = myGraph.nodeIter();
+            while (runner.hasNext()){
+                NodeData temp = runner.next();
+                if(ansTemp != temp.getKey()) {
+//                    double sum = shortestPathDist(ansTemp, temp.getKey());
+                    List<NodeData> list = shortestPath(ansTemp, temp.getKey());
+                    double weight = list.get(list.size()-1).getWeight();
+                    if(weight > max && tspHelp(list,cities) == true) {
+                        max = weight;
+                        ans = list;
+                    }
+                }
             }
-            index++;
-            size++;
         }
         return ans;
+    }
+
+    private boolean tspHelp(List<NodeData> first, List<NodeData> second){
+        if(first.size() < second.size())
+            return false;
+        for(int i = 0 ; i < second.size() ; i++){
+            if(!first.contains(second.get(i)))
+                return false;
+        }
+        return true;
     }
 
     /**

@@ -2,8 +2,7 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class DWGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> nodes;
@@ -67,10 +66,6 @@ public class DWGraph implements DirectedWeightedGraph {
         return nodes;
     }
 
-    public HashMap<Integer, HashMap<Integer, EdgeData>> getNewEdges(){
-        return newEdges;
-    }
-
     public HashMap<Integer, HashMap<Integer, EdgeData>> getReversedEdges(){
         return reversedEdges;
     }
@@ -82,7 +77,7 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public void addNode(NodeData n) {
-        if(n == null || this.nodes.containsKey(n.getKey()) || nodes.get(n.getKey()) != null)
+        if(n == null)
             throw new RuntimeException("The new node does not exist or the key already exist");
         nodes.put(n.getKey(),n);
         this.mc ++;
@@ -129,8 +124,28 @@ public class DWGraph implements DirectedWeightedGraph {
 
     @Override
     public Iterator<EdgeData> edgeIter(){
-        Iterator edge = this.newEdges.get(newEdges.values()).values().iterator();
-        return edge;
+        return new Iterator<EdgeData>() {
+            private int counter = mc;
+            private int index = 0;
+            private List<EdgeData> edges = getNewEdges();
+
+            @Override
+            public boolean hasNext() {
+                if(mc != counter){
+                    throw new RuntimeException("the graph was changed since last update");
+                }
+                if (index < edges.size())
+                    return true;
+                else return false;
+            }
+
+            @Override
+            public EdgeData next() {
+                if(mc != counter)
+                    throw new RuntimeException("the graph was changes since last update");
+                return edges.get(index++);
+            }
+        };
     }
 
     /**
@@ -140,7 +155,7 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-         return newEdges.get(node_id).values().iterator();
+        return newEdges.get(node_id).values().iterator();
     }
 
     /**
@@ -209,5 +224,12 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public int getMC() {
         return this.mc;
+    }
+
+    private List<EdgeData> getNewEdges(){
+        List<EdgeData> list = new ArrayList<>();
+        for(HashMap<Integer, EdgeData> map : newEdges.values())
+            list.addAll(map.values());
+        return list;
     }
 }
