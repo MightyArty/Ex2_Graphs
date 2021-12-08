@@ -187,8 +187,10 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public NodeData center() {
+
         if (!isConnected())
             return null;
+
         // the first node of the graph
         Iterator<NodeData> node = myGraph.nodeIter();
         double minimum = Double.MAX_VALUE;
