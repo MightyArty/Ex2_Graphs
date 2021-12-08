@@ -54,6 +54,17 @@ public class Node implements NodeData, Serializable {
         this.location = new Location(x,y,z);
     }
 
+    /**
+     * Empty Constructor
+     */
+    public Node(){
+        this.weight = 0;
+        this.info = "";
+        this.tag = -1;
+        this.location = null;
+        this.color = null;
+    }
+
     @Override
     public int getKey() {
         return this.key;
