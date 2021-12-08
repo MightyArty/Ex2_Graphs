@@ -99,8 +99,9 @@ public class Ex2 {
         //n.getGraph().removeEdge(0,16);
         //n.getGraph().removeEdge(0,1);
         //System.out.println(n.getGraph().removeNode(0));
-      System.out.println(n.shortestPath(0,4));
-      //  System.out.println(n.center());
+      //System.out.println(n.shortestPathDist(0,4));
+       // System.out.println(n.shortestPath(0,4));
+              //  System.out.println(n.center());
         //Iterator<NodeData> a=n.getGraph().nodeIter();
         //while(a.hasNext()) System.out.println(a.next());
        // System.out.println(n.isConnected());
@@ -124,5 +125,6 @@ public class Ex2 {
 //        q.add(111);
 //        System.out.println(q.peek());
 //        System.out.println(q);
+        System.out.println(n.center());
     }
 }

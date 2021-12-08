@@ -40,7 +40,7 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public NodeData getNode(int key) {
         if(!this.nodes.containsKey(key))
-            throw new RuntimeException("The key does not exist!");
+          return null;
         return nodes.get(key);
     }
 
@@ -95,8 +95,8 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public void connect(int src, int dest, double w) {
-//        if(!this.nodes.containsKey(src) || !this.nodes.containsKey(dest) || src == dest || w < 0)
-//            return;
+        if(!this.nodes.containsKey(src) || !this.nodes.containsKey(dest) || src == dest || w < 0)
+            return;
         EdgeData edge = new EData(src, dest, w);
         if(newEdges.get(src)!=null) {
             HashMap<Integer, EdgeData> temp = newEdges.get(src);
