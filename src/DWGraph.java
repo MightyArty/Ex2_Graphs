@@ -17,6 +17,8 @@ public class DWGraph implements DirectedWeightedGraph {
         nodes = graph.nodes;
         newEdges = graph.newEdges;
         reversedEdges = graph.reversedEdges;
+        this.edgeSize=graph.edgeSize;
+        this.mc=graph.mc;
     }
 
     /**
