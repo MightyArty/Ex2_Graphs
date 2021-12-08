@@ -46,7 +46,7 @@ public class EData implements EdgeData {
 
     @Override
     public double getWeight() {
-        return this.getWeight();
+        return this.Weight;
     }
 
     @Override

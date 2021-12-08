@@ -1,17 +1,13 @@
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class DWGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> nodes;
-    private HashMap<Vector<Integer>, EdgeData> edges;   // vector --> (src,dest)
+  //  private HashMap<Vector<Integer>, EdgeData> edges;   // vector --> (src,dest)
     private HashMap<Integer, HashMap<Integer, EdgeData>> newEdges;
     private HashMap<Integer, HashMap<Integer, EdgeData>> reversedEdges;
     private int edgeSize;
@@ -19,7 +15,6 @@ public class DWGraph implements DirectedWeightedGraph {
 
     public DWGraph(DWGraph graph){
         nodes = graph.nodes;
-        edges = graph.edges;
         newEdges = graph.newEdges;
         reversedEdges = graph.reversedEdges;
     }
@@ -29,7 +24,7 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     public DWGraph(){
         this.nodes = new HashMap<>();  // new node map
-        this.edges = new HashMap<>();   // new edges map
+     //   this.edges = new HashMap<>();   // new edges map
         this.newEdges = new HashMap<>();
         this.reversedEdges = new HashMap<>();
         this.edgeSize = 0;
@@ -59,8 +54,8 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public EdgeData getEdge(int src, int dest) {
-        if(newEdges.get(src).get(dest) == null || src == dest)
-            throw new RuntimeException("There is no source or destination or the source is equal to destination so put a right data!");
+//        if(newEdges.get(src).get(dest) == null || src == dest)
+//            throw new RuntimeException("There is no source or destination or the source is equal to destination so put a right data!");
         EdgeData ans = newEdges.get(src).get(dest);
         return ans;
     }
@@ -100,16 +95,27 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public void connect(int src, int dest, double w) {
-        if(!this.nodes.containsKey(src) || !this.nodes.containsKey(dest) || src == dest || w < 0)
-            return;
+//        if(!this.nodes.containsKey(src) || !this.nodes.containsKey(dest) || src == dest || w < 0)
+//            return;
         EdgeData edge = new EData(src, dest, w);
-        HashMap<Integer, EdgeData> temp = new HashMap<>();
-        temp.put(dest,edge);
-        newEdges.put(src,temp);
-
-        HashMap<Integer, EdgeData> temp2 = new HashMap<>();
-        temp.put(src,edge);
-        newEdges.put(dest,temp2);
+        if(newEdges.get(src)!=null) {
+            HashMap<Integer, EdgeData> temp = newEdges.get(src);
+            temp.put(dest, edge);
+            newEdges.put(src, temp);
+        } else{
+            HashMap<Integer,EdgeData> temp =new HashMap<>();
+            temp.put(dest,edge);
+            newEdges.put(src,temp);
+        }
+        if(reversedEdges.get(dest)!=null) {
+            HashMap<Integer, EdgeData> temp2 = reversedEdges.get(dest);
+            temp2.put(src, edge);
+            reversedEdges.put(dest, temp2);
+        } else{
+            HashMap<Integer,EdgeData> temp =new HashMap<>();
+            temp.put(src,edge);
+            reversedEdges.put(dest,temp);
+        }
         this.edgeSize ++;
         this.mc ++;
     }
@@ -121,7 +127,7 @@ public class DWGraph implements DirectedWeightedGraph {
 
     @Override
     public Iterator<EdgeData> edgeIter(){
-        Iterator edge = newEdges.values().iterator();
+        Iterator edge = this.newEdges.get(newEdges.values()).values().iterator();
         return edge;
     }
 
@@ -146,10 +152,10 @@ public class DWGraph implements DirectedWeightedGraph {
     public NodeData removeNode(int key) {
         if(!this.nodes.containsKey(key))
             throw new RuntimeException("The graph does not contain this vertex!");
-        Node vertex = (Node) nodes.remove(key);
+        NodeData vertex = nodes.remove(key);
         HashMap<Integer, EdgeData> regular = newEdges.get(key); //3
         HashMap<Integer, EdgeData> reversed = reversedEdges.get(key);
-        Iterator<EdgeData> i = regular.values().iterator();
+        Iterator<EdgeData> i = newEdges.get(key).values().iterator();
         Iterator<EdgeData> k = reversed.values().iterator();
         while (i.hasNext()){
             EdgeData runner = i.next(); //1

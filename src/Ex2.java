@@ -2,20 +2,13 @@ import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
-import com.google.gson.*;
-import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.*;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Iterator;
 
 /**
@@ -89,8 +82,47 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
+       // DWGraphAlgorithm algo=new DWGraphAlgorithm();
+        //DWGraph temp= new DWGraph();
+        DirectedWeightedGraph temp = loadFromJson("C:\\Users\\97252\\IdeaProjects\\Ex2_Graphs\\src\\G1.json");
 
-        DWGraph graph = loadFromJson("/Users/valhalla/IdeaProjects/Ex2_Graphs/src/G1.json");
-        System.out.println(graph.getEdge(0,16).toString());
+  //      algo.getGraph().connect(0,16,1.5677693324851103);
+//        algo.getGraph().connect(1,0,1.8635670623870366);
+       DWGraphAlgorithm n = new DWGraphAlgorithm();
+
+       n.init(temp);
+
+        Iterator<EdgeData> i =n.getGraph().edgeIter(0);
+//        while(i.hasNext()){
+//            System.out.println(i.next());
+//        }
+        //n.getGraph().removeEdge(0,16);
+        //n.getGraph().removeEdge(0,1);
+        //System.out.println(n.getGraph().removeNode(0));
+      System.out.println(n.shortestPath(0,4));
+      //  System.out.println(n.center());
+        //Iterator<NodeData> a=n.getGraph().nodeIter();
+        //while(a.hasNext()) System.out.println(a.next());
+       // System.out.println(n.isConnected());
+      //  System.out.println(n.getGraph().removeNode(0));
+      //  System.out.println(n.getGraph().edgeIter().next());
+       // System.out.println(n.getGraph().removeNode(0));
+       // System.out.println(n.isConnected());
+      // EdgeData s1 =  n.edgeIter(0).next();
+      //  String e1 = s1.toString();
+//       System.out.println(t1.edgeIter(0).toString());
+//        System.out.println(e1);
+
+
+      //  System.out.println(n.getGraph().edgeSize());
+       // System.out.println(n.isConnected());
+      //  System.out.println(graph.getEdge(0,16).toString());
+        //System.out.println(graph.getEdge(1,0).toString());
+//        Queue<Integer> q =new ArrayDeque<>();
+//        q.add(10);
+//        q.add(20);
+//        q.add(111);
+//        System.out.println(q.peek());
+//        System.out.println(q);
     }
 }
