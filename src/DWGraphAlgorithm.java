@@ -195,10 +195,8 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         if (!isConnected())
             return null;
         double min = Double.MAX_VALUE;
-       // System.out.println(min);
-        DirectedWeightedGraph graph = this.myGraph;
         Iterator<NodeData> i = myGraph.nodeIter();
-        NodeData ans = new Node(graph.getNode(0));
+        NodeData ans = new Node();
         while(i.hasNext()) {
             NodeData t= i.next();
             double max = 0;
@@ -238,27 +236,27 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             algo.getGraph().addNode(cities.get(index));
         }
 
-//        Iterator<EdgeData> iterator = algo.getGraph().edgeIter();
-//        while (iterator.hasNext()) {
-//            int counter = 0;
-//            int index = 0;
-//            EdgeData runner = iterator.next();
-//            int src = runner.getSrc();
-//            int dest = runner.getDest();
-//            double weight = runner.getWeight();
-//            List<NodeData> temp = cities;
-//
-//            while (!temp.isEmpty()) {
-//                int key = temp.get(index).getKey();
-//                if (key == src || key == dest) {
-//                    counter++;
-//                }
-//                temp.remove(index);
-//                index++;
-//            }
-//            if (counter == 2)
-//                algo.getGraph().connect(src, dest, weight);
-//        }
+        Iterator<EdgeData> iterator = algo.getGraph().edgeIter();
+        while (iterator.hasNext()) {
+            int counter = 0;
+            int index = 0;
+            EdgeData runner = iterator.next();
+            int src = runner.getSrc();
+            int dest = runner.getDest();
+            double weight = runner.getWeight();
+            List<NodeData> temp = cities;
+
+            while (!temp.isEmpty()) {
+                int key = temp.get(index).getKey();
+                if (key == src || key == dest) {
+                    counter++;
+                }
+                temp.remove(index);
+                index++;
+            }
+            if (counter == 2)
+                algo.getGraph().connect(src, dest, weight);
+        }
 
         //check if the graph is connected
         if (!isConnected()) return null;
