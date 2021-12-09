@@ -15,8 +15,6 @@ public class Node implements NodeData, Serializable {
     private double weight;
     private String info;
     private Location location;
-    private Color color;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
-
     public Node(double x, double y, double z, int key){
         this.key = key;
         this.location = new Location(x, y, z);
@@ -32,7 +30,6 @@ public class Node implements NodeData, Serializable {
         this.weight = node.getWeight();
         this.tag = 0;
         this.info = node.getInfo();
-        this.color = Color.WHITE;
     }
 
     /**
@@ -62,7 +59,6 @@ public class Node implements NodeData, Serializable {
         this.info = "";
         this.tag = -1;
         this.location = null;
-        this.color = null;
     }
 
     @Override
@@ -104,23 +100,6 @@ public class Node implements NodeData, Serializable {
     public void setTag(int t) {
         this.tag = t;
     }
-
-    /**
-     * getter to the color of the Node
-     * @return the current color (White in start)
-     */
-    public Color getColor() {
-        return color;
-    }
-
-    /**
-     * set new color for the node
-     * @param color new color of the new node
-     */
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
 
     public static int getKeys() {
         return keys;
