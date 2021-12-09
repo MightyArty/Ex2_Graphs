@@ -1,3 +1,5 @@
+package Algo;
+
 import api.EdgeData;
 
 public class EData implements EdgeData {

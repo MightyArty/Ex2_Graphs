@@ -1,3 +1,5 @@
+package Algo;
+
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
@@ -36,9 +38,9 @@ public class DWGraph implements DirectedWeightedGraph {
     }
 
     /**
-     * returns the Ex2.node_data by the node_id,
+     * returns the Algo.Ex2.node_data by the node_id,
      * @param key - the node_id
-     * @return the Ex2.node_data by the node_id, null if none.
+     * @return the Algo.Ex2.node_data by the node_id, null if none.
      */
     @Override
     public NodeData getNode(int key) {
@@ -73,7 +75,7 @@ public class DWGraph implements DirectedWeightedGraph {
     }
 
     /**
-     * adds a new node to the graph with the given Ex2.node_data.
+     * adds a new node to the graph with the given Algo.Ex2.node_data.
      * Note: this method should run in O(1) time.
      * @param n
      */
@@ -209,6 +211,7 @@ public class DWGraph implements DirectedWeightedGraph {
             edgeSize --;
 
         }
+        this.newEdges.remove(key);
         this.mc ++;
         return vertex;
     }
