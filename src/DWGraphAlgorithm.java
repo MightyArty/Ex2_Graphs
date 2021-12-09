@@ -19,8 +19,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     private HashMap<Integer, NodeData> dNodeMap; // map that holds info of the Dijkstra algo for each node
 
     /**
-     * Inits the graph on which this set of algorithms operates on.
-     *
+     * Inits the graph on which this set of algorithms operates on
      * @param g
      */
     @Override
@@ -37,11 +36,19 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         this.dNodeMap = new HashMap<>();
     }
 
+    /**
+     * Returns the underlying graph of which this class works.
+     * @return the graph
+     */
     @Override
     public DirectedWeightedGraph getGraph() {
         return this.myGraph;
     }
 
+    /**
+     * Computes a deep copy of this weighted graph.
+     * @return the copied graph
+     */
     @Override
     public DirectedWeightedGraph copy() {
         DirectedWeightedGraph copy = this.myGraph;
@@ -55,33 +62,36 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public boolean isConnected() {
-//        if (DFS() > 1) {// There is more than one component
-//            System.out.println(DFS());
-//            return false;
-//        } else {
         DirectedWeightedGraph graph = copy();
         int edgeSize = graph.edgeSize();
         int nodeSize = graph.nodeSize();
+
         // if the number of edges equal to number of vertex*(vertex-1) than the graph is connected
         if (edgeSize == nodeSize * (nodeSize - 1)) return true;
         DirectedWeightedGraph temp = graph;
         int key = 0;
         Iterator<NodeData> t = temp.nodeIter();
+
         //check which key is the first to start from
         key = t.next().getKey();
         Node node = (Node) graph.getNode(key);
+
         //painting the nodes to gray
         DFSConnect(temp, node);
         Iterator<NodeData> i = temp.nodeIter();
+
         //check if all the nodes are GRAY
         while (i.hasNext())
             //if one of the nodes is not gray, the graph is not connected
             if (i.next().getTag() != 1) return false;
+
         //transposing the graph
         temp = tran();
         DFSConnect(temp, node);
+
         //check if all the nodes are GRAY again
         i = temp.nodeIter();
+
         while (i.hasNext())
             //if one of the nodes is not gray, the transpose graph is not connected
             if (i.next().getTag() != 1) return false;
@@ -132,10 +142,8 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
                     if (graph.getNode(next.getDest()).getWeight() > sumWeight) {
                         //init the node weight
                         graph.getNode(next.getDest()).setWeight(sumWeight);
-                        //dNodeMap.get(next.getSrc()).setWeight(sumWeight);
                         // init the node parent
                         graph.getNode(next.getDest()).setTag(next.getSrc());
-//                        dNodeMap.get(next.getSrc()).setTag(next.getSrc());
                         dNodeMap.put(next.getDest(), curr);
                     }
                     NodeData t = graph.getNode(next.getDest());
@@ -147,9 +155,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             pq.poll();
             curr = pq.peek();
         }
-        // System.out.println(this.dNodeMap);
         double ans = graph.getNode(dest).getWeight();
-
         return ans;
     }
 
@@ -188,8 +194,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         if (!isConnected())
             return null;
         double min = Double.MAX_VALUE;
-       // System.out.println(min);
-        DirectedWeightedGraph graph = this.myGraph;
         Iterator<NodeData> i = myGraph.nodeIter();
         NodeData ans = new Node();
         while(i.hasNext()) {
@@ -204,16 +208,12 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
                      if(sum>max )
                         max=sum;
                 }
-                //this.myGraph=graph;
             }
-
             if (min > max) {
                 ans = myGraph.getNode(ansTemp);
                 min = max;
             }
-
         }
-
         return ans;
     }
 
@@ -224,36 +224,61 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
+        if(cities.isEmpty())
+            return null;
+
         List<NodeData> ans = new LinkedList<>();
-        //if cities size is one
-        if (cities.size() == 1) {
+        List<Integer> getCities = new ArrayList<>();
+
+        // getting all the nodes from given list 'cities' to new list of INTEGERS
+        for(NodeData node : cities){
+            getCities.add(node.getKey());
+        }
+
+        // if there are only one node in the given list just return this node
+        if(getCities.size() == 1) {
             ans.add(cities.get(0));
             return ans;
-        }//v
+        }
 
-        double min = Double.MAX_VALUE;
-        Iterator<NodeData> iterator = cities.iterator();
-        while (iterator.hasNext()){
-            NodeData current = iterator.next();
-            double max = 0;
-            int ansTemp = current.getKey();
-            Iterator<NodeData> runner = myGraph.nodeIter();
-            while (runner.hasNext()){
-                NodeData temp = runner.next();
-                if(ansTemp != temp.getKey()) {
-//                    double sum = shortestPathDist(ansTemp, temp.getKey());
-                    List<NodeData> list = shortestPath(ansTemp, temp.getKey());
-                    double weight = list.get(list.size()-1).getWeight();
-                    if(weight > max && tspHelp(list,cities) == true) {
-                        max = weight;
-                        ans = list;
-                    }
-                }
+        // first node
+        int first = getCities.get(0);
+
+        // second node
+        int second = getCities.get(1);
+
+        while (!getCities.isEmpty()){
+            if(!ans.isEmpty() && ans.get(ans.size() - 1).getKey() == first){
+                ans.remove(ans.size() - 1);
             }
+
+            List<NodeData> list = shortestPath(first, second);
+            List<Integer> temp = new ArrayList<>();
+            // generate a list of integers from a given list of nodes
+            for(NodeData n : list){
+                temp.add(n.getKey());
+            }
+            getCities.removeAll(temp);
+            ans.addAll(list);
+
+            // move the src and the dest to the next index
+            if(!getCities.isEmpty()){
+                first = second;
+                second = getCities.get(0);
+            }
+
         }
         return ans;
     }
 
+    /**
+     * checking if all the nodes from the given list cities
+     * is in out graph list of nodes
+     * maybe not going to be in use
+     * @param first the original list of nodes
+     * @param second the given list of cities to visit
+     * @return true if so, else false
+     */
     private boolean tspHelp(List<NodeData> first, List<NodeData> second){
         if(first.size() < second.size())
             return false;
@@ -321,7 +346,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     /**
      * JSON format save for the nodes
-     *
      * @param node the current node
      * @return json object
      */
@@ -341,7 +365,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     /**
      * JSON format save for the edges
-     *
      * @param edge the current edge
      * @return json object
      */
@@ -364,7 +387,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      * if the file was successfully loaded - the underlying graph
      * of this class will be changed (to the loaded one), in case the
      * graph was not loaded the original graph should remain "as is".
-     *
      * @param file - file name of JSON file
      * @return true - iff the graph was successfully loaded.
      */
@@ -410,33 +432,12 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         return flag;
     }
 
-//    private int DFS() {
-//        DirectedWeightedGraph temp = this.myGraph;
-//        int count = 0;
-//        Iterator<NodeData> i = temp.nodeIter();
-//        while (i.hasNext()) {
-//            NodeData node = i.next();
-//            if (node.getTag() == 0) {
-//                count++;
-//                DFS_visit(temp, node);
-//            }
-//        }
-//        return count;
-//    }
-//
-//    private void DFS_visit(DirectedWeightedGraph graph, NodeData n) {
-//        n.setTag(1);
-//        Iterator<EdgeData> i = graph.edgeIter(n.getKey());
-//        while (i.hasNext()) {
-//            EdgeData edge = i.next();
-//            NodeData v = graph.getNode(edge.getDest());
-//            if (v.getTag() == 0) {
-//                DFS_visit(graph, v);
-//            }
-//        }
-//        n.setTag(2);
-//    }
-
+    /**
+     * function to change the tag to '1' after we visit
+     * the given node and the edge that need to be connected to it
+     * @param g given graph
+     * @param node given node
+     */
     private void DFSConnect(DirectedWeightedGraph g, NodeData node) {
         node.setTag(1);
         Iterator<EdgeData> i = g.edgeIter(node.getKey());
@@ -451,6 +452,12 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         }
     }
 
+    /**
+     * simple transpose function
+     * takes every node in our graph and reverse the direction of the edge that
+     * connected to this node
+     * @return new transposed graph
+     */
     private DirectedWeightedGraph tran() {
         DirectedWeightedGraph ans = new DWGraph();
         Iterator<NodeData> i = this.myGraph.nodeIter();
@@ -470,5 +477,4 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         }
         return ans;
     }
-
 }

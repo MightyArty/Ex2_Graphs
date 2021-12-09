@@ -86,7 +86,7 @@ public class Ex2 {
     public static void main(String[] args) {
        // DWGraphAlgorithm algo=new DWGraphAlgorithm();
         //DWGraph temp= new DWGraph();
-        DirectedWeightedGraph temp = loadFromJson("/Users/valhalla/IdeaProjects/Ex2_Graphs/data/G1.json");
+        DirectedWeightedGraph temp = loadFromJson("/Users/valhalla/IdeaProjects/Ex2_Graphs/data/G2.json");
 
   //      algo.getGraph().connect(0,16,1.5677693324851103);
 //        algo.getGraph().connect(1,0,1.8635670623870366);
@@ -140,11 +140,15 @@ public class Ex2 {
  //       System.out.println(n.shortestPathDist(0,5));
 //      System.out.println(n.center());
         List<NodeData> test = new LinkedList<>();
-
+//
+        test.add(n.getGraph().getNode(27));
         test.add(n.getGraph().getNode(0));
-        test.add(n.getGraph().getNode(16));
-//        test.add(n.getGraph().getNode(2));
 //        test.add(n.getGraph().getNode(3));
+//        test.add(n.getGraph().getNode(21));
+//        test.add(n.getGraph().getNode(25));
+//        test.add(n.getGraph().getNode(2));
+//        test.add(n.getGraph().getNode(7));
+
 
         System.out.println(n.tsp(test));
 
