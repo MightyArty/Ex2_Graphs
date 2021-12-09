@@ -19,4 +19,3 @@ Represent the DirectedWeightedGraphAlgorithms functions (init,copy,isConnected,s
 - [Travelling salesman problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem)
 - [Shortest Path Problem](https://en.wikipedia.org/wiki/Shortest_path_problem)
 - [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
-- [DFS](https://en.wikipedia.org/wiki/Depth-first_search)
