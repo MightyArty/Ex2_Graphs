@@ -2,6 +2,9 @@ import api.GeoLocation;
 
 public class Location implements GeoLocation {
 
+    /**
+     * This class represents a geo location <x,y,z>, (aka Point3D data)
+     */
     private double x,y,z;
 
     /**
@@ -17,7 +20,7 @@ public class Location implements GeoLocation {
     }
 
     /**
-     * Another Constructor
+     * Empty Constructor
      */
     public Location(){
         this.x = 0;

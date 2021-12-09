@@ -3,7 +3,7 @@ import api.EdgeData;
 public class EData implements EdgeData {
     private int Src, Dest;
     private int tag;
-    double Weight;
+    private double Weight;
     private String info;
 
     /**
@@ -19,7 +19,7 @@ public class EData implements EdgeData {
         this.Src = src;
         this.Weight = weight;
         this.info = null;
-        this.tag = -1000000000; // just for setup
+        this.tag = -1000000000;
     }
 
     /**
@@ -33,22 +33,37 @@ public class EData implements EdgeData {
         this.tag = -1000000000; // just for setup
     }
 
+    /**
+     * The id of the source node of this edge.
+     * @return
+     */
     @Override
     public int getSrc() {
         return this.Src;
 
     }
 
+    /**
+     * The id of the destination node of this edge
+     * @return
+     */
     @Override
     public int getDest() {
         return this.Dest;
     }
 
+    /**
+     * @return the weight of this edge (positive value).
+     */
     @Override
     public double getWeight() {
         return this.Weight;
     }
 
+    /**
+     * Returns the remark (meta data) associated with this edge.
+     * @return
+     */
     @Override
     public String getInfo() {
         return this.info;
@@ -59,16 +74,30 @@ public class EData implements EdgeData {
         return "EData{" + "source=" + Src + ",destination=" + Dest + ",weight=" + Weight + ",info=" + info + "and the tag=" + tag + "}";
     }
 
+    /**
+     * Allows changing the remark (meta data) associated with this edge.
+     * @param s
+     */
     @Override
     public void setInfo(String s) {
         this.info=s;
     }
 
+    /**
+     * Temporal data (aka color: e,g, white, gray, black)
+     * which can be used be algorithms
+     * @return
+     */
     @Override
     public int getTag() {
         return tag;
     }
 
+    /**
+     * This method allows setting the "tag" value for temporal marking an edge - common
+     * practice for marking by algorithms.
+     * @param t - the new value of the tag
+     */
     @Override
     public void setTag(int t) {
         this.tag=t;
