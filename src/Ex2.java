@@ -10,6 +10,8 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
@@ -84,7 +86,7 @@ public class Ex2 {
     public static void main(String[] args) {
        // DWGraphAlgorithm algo=new DWGraphAlgorithm();
         //DWGraph temp= new DWGraph();
-        DirectedWeightedGraph temp = loadFromJson("C:\\Users\\97252\\IdeaProjects\\Ex2_Graphs\\src\\G1.json");
+        DirectedWeightedGraph temp = loadFromJson("/Users/valhalla/IdeaProjects/Ex2_Graphs/data/G2.json");
 
   //      algo.getGraph().connect(0,16,1.5677693324851103);
 //        algo.getGraph().connect(1,0,1.8635670623870366);
@@ -92,15 +94,19 @@ public class Ex2 {
 
        n.init(temp);
 
-        Iterator<EdgeData> i =n.getGraph().edgeIter(0);
+//        Iterator<EdgeData> i =n.getGraph().edgeIter(0);
+//        List<NodeData> list = new LinkedList<>();
+
 //        while(i.hasNext()){
 //            System.out.println(i.next());
 //        }
         //n.getGraph().removeEdge(0,16);
         //n.getGraph().removeEdge(0,1);
         //System.out.println(n.getGraph().removeNode(0));
-      System.out.println(n.shortestPath(0,4));
-      //  System.out.println(n.center());
+   //  System.out.println(n.shortestPathDist(0,1));
+    //    System.out.println(n.shortestPathDist(0,2));
+       // System.out.println(n.shortestPath(0,4));
+              //  System.out.println(n.center());
         //Iterator<NodeData> a=n.getGraph().nodeIter();
         //while(a.hasNext()) System.out.println(a.next());
        // System.out.println(n.isConnected());
@@ -116,6 +122,9 @@ public class Ex2 {
 
       //  System.out.println(n.getGraph().edgeSize());
        // System.out.println(n.isConnected());
+     //   n.shortestPathDist(0,7);
+       // Iterator<NodeData> b =n.getGraph().nodeIter();
+       // while(b.hasNext()) System.out.println(b.next().toString());
       //  System.out.println(graph.getEdge(0,16).toString());
         //System.out.println(graph.getEdge(1,0).toString());
 //        Queue<Integer> q =new ArrayDeque<>();
@@ -124,5 +133,24 @@ public class Ex2 {
 //        q.add(111);
 //        System.out.println(q.peek());
 //        System.out.println(q);
+//        for(int j=0; j<8; j++)
+//            System.out.println(n.shortestPathDist(8,j));
+//        for(int k=9; k<17; k++)
+//        System.out.println(n.shortestPathDist(8,k));
+ //       System.out.println(n.shortestPathDist(0,5));
+//      System.out.println(n.center());
+        List<NodeData> test = new LinkedList<>();
+//
+        test.add(n.getGraph().getNode(3));
+        test.add(n.getGraph().getNode(2));
+//        test.add(n.getGraph().getNode(3));
+//        test.add(n.getGraph().getNode(21));
+//        test.add(n.getGraph().getNode(25));
+//        test.add(n.getGraph().getNode(2));
+//        test.add(n.getGraph().getNode(7));
+
+
+        System.out.println(n.tsp(test));
+
     }
 }

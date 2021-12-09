@@ -1,11 +1,6 @@
-import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
-
-import java.awt.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class Node implements NodeData, Serializable {
 
@@ -15,9 +10,7 @@ public class Node implements NodeData, Serializable {
     private double weight;
     private String info;
     private Location location;
-    private Color color;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
-    private HashMap<Integer, EdgeData> fromSRC; //hash map representing the start of path
-    private HashMap<Integer, EdgeData> toDEST;  //hash map representing the end of path
+
 
     public Node(double x, double y, double z, int key){
         this.key = key;
@@ -34,7 +27,6 @@ public class Node implements NodeData, Serializable {
         this.weight = node.getWeight();
         this.tag = 0;
         this.info = node.getInfo();
-        this.color = Color.WHITE;
     }
 
     /**
@@ -47,8 +39,6 @@ public class Node implements NodeData, Serializable {
         this.weight = 0;
         this.info = "";
         this.tag = 0;
-        this.fromSRC = new HashMap<>();
-        this.toDEST = new HashMap<>();
 
         String[] locArr = loc.split(",");
         double x = Double.parseDouble(locArr[0]); // x coordinate
@@ -58,124 +48,87 @@ public class Node implements NodeData, Serializable {
         this.location = new Location(x,y,z);
     }
 
+    /**
+     * Empty Constructor
+     */
+    public Node(){
+        this.weight = 0;
+        this.info = "";
+        this.tag = -1;
+        this.location = null;
+    }
+
+    /**
+     * Returns the key (id) associated with this node.
+     * @return
+     */
     @Override
     public int getKey() {
         return this.key;
     }
 
+    /** Returns the location of this node, if none return null.
+     * @return
+     */
     @Override
     public GeoLocation getLocation() {
         return this.location;
     }
 
+    /**
+     * Returns the weight associated with this node.
+     * @return
+     */
     @Override
     public double getWeight() {
         return this.weight;
     }
 
+    /**
+     * Allows changing this node's weight.
+     * @param w - the new weight
+     */
     @Override
     public void setWeight(double w) {
         this.weight = w;
     }
 
+    /**
+     * Returns the remark (meta data) associated with this node.
+     * @return
+     */
     @Override
     public String getInfo() {
         return this.info;
     }
 
+    /**
+     * Allows changing the remark (meta data) associated with this node.
+     * @param s
+     */
     @Override
     public void setInfo(String s) {
         this.info = s;
     }
 
+    /**
+     * Temporal data (aka color: e,g, white, gray, black)
+     * which can be used be algorithms
+     * @return
+     */
     @Override
     public int getTag() {
         return this.tag;
     }
 
+    /**
+     * Allows setting the "tag" value for temporal marking an node - common
+     * practice for marking by algorithms.
+     * @param t - the new value of the tag
+     */
     @Override
     public void setTag(int t) {
         this.tag = t;
-    }
-
-    /**
-     * getter to the color of the Node
-     * @return the current color (White in start)
-     */
-    public Color getColor() {
-        return color;
-    }
-
-    /**
-     * set new color for the node
-     * @param color new color of the new node
-     */
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    /**
-     * adding the src info to the map
-     * @param key
-     * @param edge
-     */
-    public void addFromSRC(int key, EdgeData edge){
-        fromSRC.put(key,edge);
-    }
-
-    /**
-     * adding the dest info to the map
-     * @param key
-     * @param edge
-     */
-    public void addToDEST(int key, EdgeData edge){
-        toDEST.put(key,edge);
-    }
-
-    /**
-     * Iterator for fromSRC map
-     * @return
-     */
-    public Iterator<EdgeData> getFromSRCIter(){
-        return fromSRC.values().iterator();
-    }
-
-    /**
-     * Iterator for toDEST map
-     * @return
-     */
-    public Iterator<EdgeData> getToDESTIter(){
-        return toDEST.values().iterator();
-    }
-
-    public static int getKeys() {
-        return keys;
-    }
-
-    public HashMap<Integer, EdgeData> getFromSRC() {
-        return fromSRC;
-    }
-
-    public HashMap<Integer, EdgeData> getToDEST() {
-        return toDEST;
-    }
-
-    /**
-     * Method to remove given key from src map
-     * @param key
-     * @return
-     */
-    public EdgeData removeSRC(int key){
-        return fromSRC.remove(key);
-    }
-
-    /**
-     * Method to remove given key from dest map
-     * @param key
-     * @return
-     */
-    public EdgeData removeDEST(int key){
-        return toDEST.remove(key);
     }
 
     /**
@@ -191,8 +144,6 @@ public class Node implements NodeData, Serializable {
 
     @Override
     public String toString(){
-        String res = "Node( " + this.key +" " + this.location + ",weight=" + this.weight +
-        ",info=" + this.info + ",tag=" + this.tag+ "\n";
-        return res;
+        return "Node{" + "key= " + this.key + ",location= " + location + ", tag= " + tag + ", weight= " + weight + ", info= " + info  + "}" + "\n";
     }
 }
