@@ -141,8 +141,8 @@ public class Ex2 {
 //      System.out.println(n.center());
         List<NodeData> test = new LinkedList<>();
 //
-        test.add(n.getGraph().getNode(27));
-        test.add(n.getGraph().getNode(0));
+        test.add(n.getGraph().getNode(3));
+        test.add(n.getGraph().getNode(2));
 //        test.add(n.getGraph().getNode(3));
 //        test.add(n.getGraph().getNode(21));
 //        test.add(n.getGraph().getNode(25));
