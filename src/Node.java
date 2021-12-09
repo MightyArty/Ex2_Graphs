@@ -1,21 +1,15 @@
-import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
 
-import java.awt.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class Node implements NodeData, Serializable {
 
-    private static int keys = 0;
     private int key;
     private int tag=0;
     private double weight;
     private String info;
     private Location location;
-    private Color color;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
 
     public Node(double x, double y, double z, int key){
         this.key = key;
@@ -32,7 +26,6 @@ public class Node implements NodeData, Serializable {
         this.weight = node.getWeight();
         this.tag = 0;
         this.info = node.getInfo();
-        this.color = Color.WHITE;
     }
 
     /**
@@ -58,11 +51,11 @@ public class Node implements NodeData, Serializable {
      * Empty Constructor
      */
     public Node(){
+        this.key=-1;
         this.weight = 0;
         this.info = "";
         this.tag = -1;
         this.location = null;
-        this.color = null;
     }
 
     @Override
@@ -72,6 +65,7 @@ public class Node implements NodeData, Serializable {
 
     @Override
     public GeoLocation getLocation() {
+        if(this.location==null)return null;
         return this.location;
     }
 
@@ -104,28 +98,6 @@ public class Node implements NodeData, Serializable {
     public void setTag(int t) {
         this.tag = t;
     }
-
-    /**
-     * getter to the color of the Node
-     * @return the current color (White in start)
-     */
-    public Color getColor() {
-        return color;
-    }
-
-    /**
-     * set new color for the node
-     * @param color new color of the new node
-     */
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-
-    public static int getKeys() {
-        return keys;
-    }
-
 
     /**
      * Setting the new location

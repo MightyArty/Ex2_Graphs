@@ -1,11 +1,4 @@
 import api.GeoLocation;
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
 
 public class Location implements GeoLocation {
 
@@ -60,18 +53,6 @@ public class Location implements GeoLocation {
     @Override
     public double distance(GeoLocation g) {
         return Math.sqrt(Math.pow(this.x - g.x(), 2) + Math.pow(this.y - g.y(), 2) + Math.pow(this.z - g.z(), 2));
-    }
-
-    public void setX(double x){
-        this.x = x;
-    }
-
-    public void setY(double y){
-        this.y = y;
-    }
-
-    public void setZ(double z){
-        this.z = z;
     }
 
     public String toString(){
