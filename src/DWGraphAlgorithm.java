@@ -321,7 +321,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
                 edges.put(edge);
             }
         }
-
         try {
             graph.put("nodes", nodes);
             graph.put("edges", edges);
