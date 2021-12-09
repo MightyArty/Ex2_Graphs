@@ -1,3 +1,5 @@
+package Algo;
+
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
@@ -11,7 +13,7 @@ public class Node implements NodeData, Serializable {
 
     private static int keys = 0;
     private int key;
-    private int tag;
+    private int tag=0;
     private double weight;
     private String info;
     private Location location;
@@ -34,8 +36,6 @@ public class Node implements NodeData, Serializable {
         this.weight = node.getWeight();
         this.tag = 0;
         this.info = node.getInfo();
-        this.fromSRC = new HashMap<>();
-        this.toDEST = new HashMap<>();
         this.color = Color.WHITE;
     }
 
@@ -49,8 +49,7 @@ public class Node implements NodeData, Serializable {
         this.weight = 0;
         this.info = "";
         this.tag = 0;
-        this.fromSRC = new HashMap<>();
-        this.toDEST = new HashMap<>();
+        
 
         String[] locArr = loc.split(",");
         double x = Double.parseDouble(locArr[0]); // x coordinate
@@ -193,9 +192,8 @@ public class Node implements NodeData, Serializable {
 
     @Override
     public String toString(){
-        String res = "Node(" + "location=" + this.location + ",weight=" + this.weight + ",key=" + this.key +
-        ",info=" + this.info + ",tag=" + this.tag + ",fromSRC=" + this.fromSRC + ",toDEST=" + this.toDEST +
-        ",color=" + this.color + ')' + "\n";
+        String res = "Node( " + this.key +" " + this.location + ",weight=" + this.weight +
+        ",info=" + this.info + ",tag=" + this.tag+ "\n";
         return res;
     }
 }

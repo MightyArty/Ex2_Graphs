@@ -1,3 +1,5 @@
+package Algo;
+
 import api.EdgeData;
 
 public class EData implements EdgeData {
@@ -46,7 +48,7 @@ public class EData implements EdgeData {
 
     @Override
     public double getWeight() {
-        return this.getWeight();
+        return this.Weight;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class EData implements EdgeData {
 
     @Override
     public String toString(){
-        return "EData{" + "source=" + this.Src + ",destination=" + this.Dest + ",weight=" + this.Weight + ",info=" + this.info + "and the tag=" + this.tag + "}";
+        return "EData{" + "source=" + Src + ",destination=" + Dest + ",weight=" + Weight + ",info=" + info + "and the tag=" + tag + "}";
     }
 
     @Override

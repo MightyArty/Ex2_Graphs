@@ -1,3 +1,5 @@
+package Algo;
+
 import api.GeoLocation;
 
 public class Location implements GeoLocation {

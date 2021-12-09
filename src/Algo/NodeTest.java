@@ -1,3 +1,5 @@
+package Algo;
+
 import api.EdgeData;
 import api.GeoLocation;
 import org.junit.jupiter.api.Test;

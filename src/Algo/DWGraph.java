@@ -1,25 +1,24 @@
+package Algo;
+
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 
 public class DWGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> nodes;
-    private HashMap<Vector<Integer>, EdgeData> edges;   // vector --> (src,dest)
+    //  private HashMap<Vector<Integer>, EdgeData> edges;   // vector --> (src,dest)
+    private HashMap<Integer, HashMap<Integer, EdgeData>> newEdges;
+    private HashMap<Integer, HashMap<Integer, EdgeData>> reversedEdges;
     private int edgeSize;
     private int mc;
 
-    public DWGraph(DirectedWeightedGraph graph){
-        nodes = new HashMap<>();
-        edges = new HashMap<>();
+    public DWGraph(DWGraph graph){
+        nodes = graph.nodes;
+        newEdges = graph.newEdges;
+        reversedEdges = graph.reversedEdges;
     }
 
     /**
@@ -27,7 +26,9 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     public DWGraph(){
         this.nodes = new HashMap<>();  // new node map
-        this.edges = new HashMap<>();   // new edges map
+        //   this.edges = new HashMap<>();   // new edges map
+        this.newEdges = new HashMap<>();
+        this.reversedEdges = new HashMap<>();
         this.edgeSize = 0;
         this.mc = 0;
     }
@@ -41,7 +42,7 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public NodeData getNode(int key) {
         if(!this.nodes.containsKey(key))
-            throw new RuntimeException("The key does not exist!");
+            return null;
         return nodes.get(key);
     }
 
@@ -55,18 +56,23 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public EdgeData getEdge(int src, int dest) {
-        if(!nodes.containsKey(src) || !nodes.containsKey(dest) || src == dest)
-            throw new RuntimeException("There is no source or destination or the source is equal to destination so put a right data!");
-        Vector<Integer> v = new Vector<>(src,dest);
-        return edges.get(v);
+//        if(newEdges.get(src).get(dest) == null || src == dest)
+//            throw new RuntimeException("There is no source or destination or the source is equal to destination so put a right data!");
+        EdgeData ans = newEdges.get(src).get(dest);
+        return ans;
     }
+
 
     public HashMap<Integer, NodeData> getNodes(){
         return nodes;
     }
 
-    public HashMap<Vector<Integer>, EdgeData> getEdges(){
-        return edges;
+    public HashMap<Integer, HashMap<Integer, EdgeData>> getNewEdges(){
+        return newEdges;
+    }
+
+    public HashMap<Integer, HashMap<Integer, EdgeData>> getReversedEdges(){
+        return reversedEdges;
     }
 
     /**
@@ -94,13 +100,24 @@ public class DWGraph implements DirectedWeightedGraph {
         if(!this.nodes.containsKey(src) || !this.nodes.containsKey(dest) || src == dest || w < 0)
             return;
         EdgeData edge = new EData(src, dest, w);
-        Vector<Integer> v = new Vector<>(src,dest);
-        edges.remove(v);    //דריסה
-        edges.put(v,edge);
-        Node node = (Node) nodes.get(src);
-        node.addFromSRC(dest,edge); // map from the src
-        node = (Node) nodes.get(dest);
-        node.addToDEST(src,edge);   // map from the dest
+        if(newEdges.get(src)!=null) {
+            HashMap<Integer, EdgeData> temp = newEdges.get(src);
+            temp.put(dest, edge);
+            newEdges.put(src, temp);
+        } else{
+            HashMap<Integer,EdgeData> temp =new HashMap<>();
+            temp.put(dest,edge);
+            newEdges.put(src,temp);
+        }
+        if(reversedEdges.get(dest)!=null) {
+            HashMap<Integer, EdgeData> temp2 = reversedEdges.get(dest);
+            temp2.put(src, edge);
+            reversedEdges.put(dest, temp2);
+        } else{
+            HashMap<Integer,EdgeData> temp =new HashMap<>();
+            temp.put(src,edge);
+            reversedEdges.put(dest,temp);
+        }
         this.edgeSize ++;
         this.mc ++;
     }
@@ -111,8 +128,9 @@ public class DWGraph implements DirectedWeightedGraph {
     }
 
     @Override
-    public Iterator<EdgeData> edgeIter() {
-        return this.edges.values().iterator();
+    public Iterator<EdgeData> edgeIter(){
+        Iterator edge = this.newEdges.get(newEdges.values()).values().iterator();
+        return edge;
     }
 
     /**
@@ -122,8 +140,7 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        Node node = (Node) nodes.get(node_id);
-        return node.getToDESTIter();    // maybe need to fix
+        return newEdges.get(node_id).values().iterator();
     }
 
     /**
@@ -136,46 +153,55 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public NodeData removeNode(int key) {
         if(!this.nodes.containsKey(key))
-            throw new RuntimeException("The graph does not contain this vertex!");
-        Node vertex = (Node) nodes.remove(key);
-        Iterator<EdgeData> i = vertex.getFromSRCIter();
+            return null;
+        NodeData vertex = nodes.remove(key);
+        HashMap<Integer, EdgeData> regular = newEdges.get(key);
+        HashMap<Integer, EdgeData> reversed = reversedEdges.get(key);
+        // runner for the regular map
+        Iterator<EdgeData> i = regular.values().iterator();
+        // runner for the reveres map
+        Iterator<EdgeData> k = reversed.values().iterator();
+
         while (i.hasNext()){
             EdgeData runner = i.next();
-            Vector<Integer> v = new Vector<>(runner.getSrc(), runner.getDest());
-            edges.remove(v);
-            this.edgeSize --;
-            Node src = (Node) nodes.get(runner.getSrc());
-            src.removeSRC(runner.getSrc());
+            EdgeData eData = newEdges.get(runner.getSrc()).get(runner.getDest());
+            reversedEdges.get(eData.getDest()).remove(eData.getSrc());
+            edgeSize --;
         }
 
-        i = vertex.getToDESTIter();
-        while (i.hasNext()){
-            EdgeData runner = i.next();
-            Vector<Integer> v = new Vector<>(runner.getSrc(), runner.getDest());
-            edges.remove(v);
-            this.edgeSize --;
-            Node dest = (Node) nodes.get(runner.getDest());
-            dest.removeDEST(runner.getDest());
+        while (k.hasNext()){
+            EdgeData runner = k.next();
+            EdgeData eData = reversedEdges.get(runner.getDest()).get(runner.getSrc());
+            newEdges.get(eData.getSrc()).remove(eData.getDest());
+            edgeSize --;
+
         }
         this.mc ++;
         return vertex;
     }
 
-//    @Override
+    /**
+     * Deletes the edge from the graph,
+     * Note: this method should run in O(1) time.
+     * @param src
+     * @param dest
+     * @return the data of the removed edge (null if none).
+     */
+    @Override
     public EdgeData removeEdge(int src, int dest) {
-        Node vertex = (Node) nodes.get(dest);
-        vertex.removeSRC(src);
-        vertex = (Node) nodes.get(src);
-        vertex.removeDEST(dest);
-        Vector <Integer> v = new Vector<>(src,dest);
+        if(src == dest || newEdges.get(src).get(dest) == null)
+            return null;
+
+        EdgeData ans = newEdges.get(src).remove(dest);
+        reversedEdges.get(dest).remove(src);
         this.mc ++;
         this.edgeSize --;
-        return edges.remove(v);
+        return ans;
     }
 
     @Override
     public int nodeSize() {
-        return this.nodeSize();
+        return this.nodes.size();
     }
 
     @Override
@@ -186,10 +212,5 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public int getMC() {
         return this.mc;
-    }
-
-    private static JSONObject parseJSON(String json_file) throws JSONException, IOException{
-        String out = new String(Files.readAllBytes(Paths.get(json_file)));
-        return new JSONObject(out);
     }
 }
