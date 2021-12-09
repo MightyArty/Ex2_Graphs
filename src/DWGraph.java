@@ -7,7 +7,6 @@ import java.util.Iterator;
 
 public class DWGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> nodes;
-  //  private HashMap<Vector<Integer>, EdgeData> edges;   // vector --> (src,dest)
     private HashMap<Integer, HashMap<Integer, EdgeData>> newEdges;
     private HashMap<Integer, HashMap<Integer, EdgeData>> reversedEdges;
     private int edgeSize;
@@ -153,22 +152,22 @@ public class DWGraph implements DirectedWeightedGraph {
     @Override
     public NodeData removeNode(int key) {
         if(!this.nodes.containsKey(key))
-            throw new RuntimeException("The graph does not contain this vertex!");
+            return null;
         NodeData vertex = nodes.remove(key);
         HashMap<Integer, EdgeData> regular = newEdges.get(key); //3
         HashMap<Integer, EdgeData> reversed = reversedEdges.get(key);
-        Iterator<EdgeData> i = newEdges.get(key).values().iterator();
-        Iterator<EdgeData> k = reversed.values().iterator();
+        Iterator<EdgeData> i = regular.values().iterator();
+       Iterator<EdgeData> k = reversed.values().iterator();
         while (i.hasNext()){
             EdgeData runner = i.next(); //1
-            EdgeData eData = regular.remove(runner.getDest()); //delete of the src 1->2
+            EdgeData eData = newEdges.get(runner.getSrc()).get(runner.getDest()); //delete of the src 1->2
             reversedEdges.get(eData.getDest()).remove(eData.getSrc());
             edgeSize --;
         }
 
         while (k.hasNext()){
             EdgeData runner = k.next();
-            EdgeData eData = reversed.remove(runner.getSrc());
+            EdgeData eData = reversedEdges.get(runner.getDest()).get(runner.getSrc());
             newEdges.get(eData.getSrc()).remove(eData.getDest());
             edgeSize --;
 
