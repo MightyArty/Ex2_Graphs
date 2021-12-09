@@ -1,6 +1,7 @@
+package Algo;
+
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
-import api.EdgeData;
 import api.NodeData;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,12 +10,9 @@ import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
- * This class is the main class for Ex2 - your implementation will be tested using this class.
+ * This class is the main class for Algo.Ex2 - your implementation will be tested using this class.
  */
 public class Ex2 {
     /**
@@ -84,9 +82,9 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
-       // DWGraphAlgorithm algo=new DWGraphAlgorithm();
-        //DWGraph temp= new DWGraph();
-        DirectedWeightedGraph temp = loadFromJson("/Users/valhalla/IdeaProjects/Ex2_Graphs/data/G3.json");
+       // Algo.DWGraphAlgorithm algo=new Algo.DWGraphAlgorithm();
+        //Algo.DWGraph temp= new Algo.DWGraph();
+        DirectedWeightedGraph temp = loadFromJson("/Users/valhalla/IdeaProjects/Ex2_Graphs/data/G1.json");
 
   //      algo.getGraph().connect(0,16,1.5677693324851103);
 //        algo.getGraph().connect(1,0,1.8635670623870366);

@@ -1,3 +1,5 @@
+package Algo;
+
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
@@ -187,7 +189,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
      * Finds the NodeData which minimizes the max distance to all the other nodes.
      * Assuming the graph isConnected, else return null.
      *
-     * @return the Node data to which the max shortest path to all the other nodes is minimized.
+     * @return the Algo.Node data to which the max shortest path to all the other nodes is minimized.
      */
     @Override
     public NodeData center() {

@@ -1,3 +1,5 @@
+package Algo;
+
 import api.GeoLocation;
 import api.NodeData;
 import java.io.Serializable;
@@ -144,6 +146,6 @@ public class Node implements NodeData, Serializable {
 
     @Override
     public String toString(){
-        return "Node{" + "key= " + this.key + ",location= " + location + ", tag= " + tag + ", weight= " + weight + ", info= " + info  + "}" + "\n";
+        return "Node{" + "key= " + key + ",location= " + location + ", tag= " + tag + ", weight= " + weight + ", info= " + info  + "}";
     }
 }
