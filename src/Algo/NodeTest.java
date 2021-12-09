@@ -87,19 +87,10 @@ class NodeTest {
 
 
 
-    @Test
-    void setColor() {
-    node.setColor(Color.white);
-    assertEquals(Color.white,node.getColor());
-    }
-
-    @Test
-    void getColor() {
-       Color c = node.getColor();
-       assertEquals(color,c);
 
 
-    }
+
+
     @Test
     void setLocation() {
         Location loc2 = new Location (1,1,0);
@@ -111,7 +102,7 @@ class NodeTest {
     }
 
     @Test
-    void testToString() {
+    void testToString() { // need to fix it
 
         String expected = "Node(" + "location=" + location + ",weight=" + weight + ",key=" + key +
                 ",info=" + this.info + ",tag=" + this.tag + ",fromSRC=" + this.fromSRC + ",toDEST=" + this.toDEST +

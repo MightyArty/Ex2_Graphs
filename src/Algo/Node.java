@@ -1,46 +1,39 @@
 package Algo;
 
-import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
 
-import java.awt.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class Node implements NodeData, Serializable {
 
-    private static int keys = 0;
     private int key;
-    private int tag=0;
+    private int tag = 0; //Color white = 0, gray = 1, black = 2
     private double weight;
     private String info;
     private Location location;
-    private Color color;    //setting the color WHITE to start with (assuming the vertex has no friends yet)
-    private HashMap<Integer, EdgeData> fromSRC; //hash map representing the start of path
-    private HashMap<Integer, EdgeData> toDEST;  //hash map representing the end of path
 
-    public Node(double x, double y, double z, int key){
+    public Node(double x, double y, double z, int key) {
         this.key = key;
         this.location = new Location(x, y, z);
     }
 
     /**
      * Copy constructor
+     *
      * @param node
      */
-    public Node(NodeData node){
+    public Node(NodeData node) {
         this.key = node.getKey();
         this.location = new Location(node.getLocation().x(), node.getLocation().y(), node.getLocation().z());
         this.weight = node.getWeight();
         this.tag = 0;
         this.info = node.getInfo();
-        this.color = Color.WHITE;
     }
 
     /**
      * Constructor for given key and location
+     *
      * @param key
      * @param loc
      */
@@ -49,14 +42,24 @@ public class Node implements NodeData, Serializable {
         this.weight = 0;
         this.info = "";
         this.tag = 0;
-        
 
         String[] locArr = loc.split(",");
         double x = Double.parseDouble(locArr[0]); // x coordinate
         double y = Double.parseDouble(locArr[1]); // y coordinate
         double z = Double.parseDouble(locArr[2]); // z coordinate
 
-        this.location = new Location(x,y,z);
+        this.location = new Location(x, y, z);
+    }
+
+    /**
+     * Empty Constructor
+     */
+    public Node() {
+        this.key = -1;
+        this.weight = 0;
+        this.info = "";
+        this.tag = -1;
+        this.location = null;
     }
 
     @Override
@@ -66,6 +69,7 @@ public class Node implements NodeData, Serializable {
 
     @Override
     public GeoLocation getLocation() {
+        if (this.location == null) return null;
         return this.location;
     }
 
@@ -100,100 +104,19 @@ public class Node implements NodeData, Serializable {
     }
 
     /**
-     * getter to the color of the Node
-     * @return the current color (White in start)
-     */
-    public Color getColor() {
-        return color;
-    }
-
-    /**
-     * set new color for the node
-     * @param color new color of the new node
-     */
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    /**
-     * adding the src info to the map
-     * @param key
-     * @param edge
-     */
-    public void addFromSRC(int key, EdgeData edge){
-        fromSRC.put(key,edge);
-    }
-
-    /**
-     * adding the dest info to the map
-     * @param key
-     * @param edge
-     */
-    public void addToDEST(int key, EdgeData edge){
-        toDEST.put(key,edge);
-    }
-
-    /**
-     * Iterator for fromSRC map
-     * @return
-     */
-    public Iterator<EdgeData> getFromSRCIter(){
-        return fromSRC.values().iterator();
-    }
-
-    /**
-     * Iterator for toDEST map
-     * @return
-     */
-    public Iterator<EdgeData> getToDESTIter(){
-        return toDEST.values().iterator();
-    }
-
-    public static int getKeys() {
-        return keys;
-    }
-
-    public HashMap<Integer, EdgeData> getFromSRC() {
-        return fromSRC;
-    }
-
-    public HashMap<Integer, EdgeData> getToDEST() {
-        return toDEST;
-    }
-
-    /**
-     * Method to remove given key from src map
-     * @param key
-     * @return
-     */
-    public EdgeData removeSRC(int key){
-        return fromSRC.remove(key);
-    }
-
-    /**
-     * Method to remove given key from dest map
-     * @param key
-     * @return
-     */
-    public EdgeData removeDEST(int key){
-        return toDEST.remove(key);
-    }
-
-    /**
      * Setting the new location
+     *
      * @param p - new new location  (position) of this node.
      */
     @Override
     public void setLocation(GeoLocation p) {
-        if(p == null)
+        if (p == null)
             this.location = new Location();
         else this.location = new Location(p);
     }
 
     @Override
-    public String toString(){
-        String res = "Node( " + this.key +" " + this.location + ",weight=" + this.weight +
-        ",info=" + this.info + ",tag=" + this.tag+ "\n";
-        return res;
+    public String toString() {
+        return "Node{" + "key= " + this.key + ",location= " + location + ", tag= " + tag + ", weight= " + weight + ", info= " + info + "}";
     }
 }
