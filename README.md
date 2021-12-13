@@ -21,7 +21,7 @@ Represent the DirectedWeightedGraphAlgorithms functions (init,copy,isConnected,s
 - [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 # GUI class :
 This class represent the GUI running simulator for our algorithem.<br/>
-[![CLICK HERE](https://img.youtube.com/vi/rzKde6IoVKQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=rzKde6IoVKQ "CLICK HERE")
+[![CLICK HERE](https://i.ibb.co/8KNR8KC/Screen-Shot-2021-12-13-at-18-09-11.png)](https://www.youtube.com/watch?v=rzKde6IoVKQ "CLICK HERE")
 <br />
 <br />This video shows how to load the jar file that we've made using termminal ( java -jar FILENAME.jar JSONFILENAME.json) although you can run the jar file directly from the folder / from the IDE. 
 <br /> The GUI has top menu bar with several options: FILE TAB -  loading from Json,saving to Json,determine the program.
