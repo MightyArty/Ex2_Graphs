@@ -13,12 +13,27 @@ class DWGraphAlgorithmTest {
     private DirectedWeightedGraph graph;
     private DWGraphAlgorithm algo;
 
+    /**
+     * In order to run the test please enter in line 21 (graph) the path to G1.json that is located on your computer.
+     */
+
     DWGraphAlgorithmTest(){
-        graph = Ex2.getGraph("/Users/valhalla/IdeaProjects/Ex2_Graphs/data/G1.json");
+        graph = tempEx2.getGraph("/Users/valhalla/IdeaProjects/Ex2_Graphs/data/G1.json");
         algo = new DWGraphAlgorithm();
         algo.init(graph);
+    }
 
 
+    @Test
+    void init(){
+        algo.init(graph);
+        assertEquals(algo.getGraph(), graph);
+    }
+
+    @Test
+    void getGraph(){
+        algo.init(graph);
+        assertEquals(algo.getGraph(), graph);
     }
 
     @Test
@@ -55,7 +70,7 @@ class DWGraphAlgorithmTest {
 
     @Test
     void center() {
-        NodeData center = algo.getGraph().getNode(8);   //center node of G1.json (checked)
+        NodeData center = algo.center();   //center node of G1-->8,,1000NODES-->362,10000NODES-->3846
         assertEquals(8,center.getKey());
     }
 
@@ -73,4 +88,17 @@ class DWGraphAlgorithmTest {
         list.add(algo.myGraph.getNode(6));
         assertEquals(5,algo.tsp(list).size());
     }
+
+    @Test
+    void load(){
+        assertTrue(algo.getGraph() != null);
+    }
+
+
+    @Test
+    void save(){
+        algo.init(graph);
+        assertTrue(algo.save("/Users/valhalla/IdeaProjects/Ex2_Graphs/data/testForSave.json"));
+    }
+
 }

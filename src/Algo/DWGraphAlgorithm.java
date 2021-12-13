@@ -122,7 +122,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         dNodeMap.put(src, curr);
 
         // Looping on all the vertices
-        for (Iterator<NodeData> it = graph.nodeIter(); it.hasNext(); ) {
+        for (Iterator<NodeData> it = graph.nodeIter(); it.hasNext(); ) {    // O(n)
             NodeData temp = it.next();
             if (temp.getKey() != src) {
                 // set all the others nodes to be infinity
@@ -134,9 +134,9 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         curr.setInfo("Not visited");
         Queue<NodeData> pq = new ArrayDeque<>();
         pq.add(curr);
-        while (!pq.isEmpty()) {
+        while (!pq.isEmpty()) { // O(n)
             Iterator<EdgeData> edge = graph.edgeIter(curr.getKey());
-            while (edge.hasNext() && pq.peek().getInfo() != "Visited") { // new condition
+            while (edge.hasNext() && pq.peek().getInfo() != "Visited") { // O(n+number) --> O(n)
                 EdgeData next = edge.next();
                 if (curr.getKey() != next.getDest()) {
                     double sumWeight = next.getWeight() + graph.getNode(next.getSrc()).getWeight();
@@ -195,25 +195,39 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     public NodeData center() {
         if (!isConnected())
             return null;
+
+        int size = myGraph.nodeSize();
+        double matrix[][] = new double[size][size];
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+                if (i == j)
+                    matrix[i][j] = 0;
+                else
+                    matrix[i][j] = Double.MAX_VALUE;
+        Iterator<EdgeData> iter = myGraph.edgeIter();
+        while (iter.hasNext()) {
+            EdgeData edge = iter.next();
+            matrix[edge.getSrc()][edge.getDest()] = edge.getWeight();
+        }
+        for (int k = 0; k < size; k++)
+            for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
+                    if (matrix[i][j] > matrix[i][k] + matrix[k][j])
+                        matrix[i][j] = matrix[i][k] + matrix[k][j];
+
+        NodeData ans = null;
         double min = Double.MAX_VALUE;
-        Iterator<NodeData> i = myGraph.nodeIter();
-        NodeData ans = new Node();
-        while(i.hasNext()) {
-            NodeData t= i.next();
-            double max = 0;
-            int ansTemp = t.getKey();
-            Iterator<NodeData> k = myGraph.nodeIter();
-            while (k.hasNext()) {
-                NodeData temp = k.next();
-                if(ansTemp!=temp.getKey()) {
-                    double sum = shortestPathDist(ansTemp, temp.getKey());
-                     if(sum>max )
-                        max=sum;
-                }
+
+        for (int i = 0; i < size; i++) {
+            double max = -1;
+            for (int j = 0; j < size; j++) {
+                if (matrix[i][j] > max)
+                    max = matrix[i][j];
             }
+            if (max == Double.MAX_VALUE) return null;
             if (min > max) {
-                ans = myGraph.getNode(ansTemp);
                 min = max;
+                ans = myGraph.getNode(i);
             }
         }
         return ans;
@@ -227,7 +241,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
         if(cities.isEmpty())
-            return null;
+            throw new RuntimeException("The list of cities should not be empty");
 
         List<NodeData> ans = new LinkedList<>();
         List<Integer> getCities = new ArrayList<>();
@@ -254,7 +268,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
                 ans.remove(ans.size() - 1);
             }
 
-            List<NodeData> list = shortestPath(first, second);
+            List<NodeData> list = shortestPath(first, second);  //O(n^2)
             List<Integer> temp = new ArrayList<>();
             // generate a list of integers from a given list of nodes
             for(NodeData n : list){
@@ -271,24 +285,6 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
 
         }
         return ans;
-    }
-
-    /**
-     * checking if all the nodes from the given list cities
-     * is in out graph list of nodes
-     * maybe not going to be in use
-     * @param first the original list of nodes
-     * @param second the given list of cities to visit
-     * @return true if so, else false
-     */
-    private boolean tspHelp(List<NodeData> first, List<NodeData> second){
-        if(first.size() < second.size())
-            return false;
-        for(int i = 0 ; i < second.size() ; i++){
-            if(!first.contains(second.get(i)))
-                return false;
-        }
-        return true;
     }
 
     /**
@@ -318,15 +314,14 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             Iterator<EdgeData> edgeIter = myGraph.edgeIter(nodeRunner.getKey());
             while (edgeIter.hasNext()) {
                 EdgeData edgeRunner = edgeIter.next();
-                edgeRunner = edgeIter.next();
                 edge = toJson(edgeRunner);
                 edges.put(edge);
             }
         }
 
         try {
-            graph.put("nodes", nodes);
-            graph.put("edges", edges);
+            graph.put("Nodes", nodes);
+            graph.put("Edges", edges);
             graph.put("nodeAmount", myGraph.nodeSize());
             graph.put("edgesAmount", myGraph.edgeSize());
             graph.put("mc", myGraph.getMC());
@@ -358,7 +353,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             object.put("info", node.getInfo());
             object.put("location", node.getLocation());
             object.put("tag", node.getTag());
-            object.put("weight", node.getWeight());
+            object.put("w", node.getWeight());
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
@@ -375,7 +370,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
         try {
             object.put("src", edge.getSrc());
             object.put("dest", edge.getDest());
-            object.put("weight", edge.getWeight());
+            object.put("w", edge.getWeight());
             object.put("info", edge.getInfo());
             object.put("tag", edge.getInfo());
         } catch (JSONException exception) {
@@ -412,7 +407,7 @@ public class DWGraphAlgorithm implements DirectedWeightedGraphAlgorithms {
             }
             for (int i = 0; i < nodes.size(); i++) {
                 JsonObject n = new Gson().fromJson(nodes.get(i), JsonObject.class);
-                String position = n.get("pos").getAsString();
+                String position = n.get("location").getAsString();
                 String[] positionArr = position.split(",");
                 double[] arr = new double[3];
                 for (int k = 0; k < positionArr.length; k++) {
