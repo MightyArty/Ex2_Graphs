@@ -19,6 +19,7 @@ Represent the DirectedWeightedGraphAlgorithms functions (init,copy,isConnected,s
 - [Travelling salesman problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem)
 - [Shortest Path Problem](https://en.wikipedia.org/wiki/Shortest_path_problem)
 - [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
+- [Floyd Warshall algorithm](https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm)
 # GUI class :
 This class represent the GUI running simulator for our algorithem.<br/>
 [![CLICK HERE](https://i.ibb.co/8KNR8KC/Screen-Shot-2021-12-13-at-18-09-11.png)](https://www.youtube.com/watch?v=rzKde6IoVKQ "CLICK HERE")
