@@ -142,8 +142,6 @@ public class DWGraph implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter(){
-        // the edges map is HashMap that contains another HashMap,
-        // so we implement the interface of Iterator
         return new Iterator<EdgeData>() {
             private int counter = mc;
             private int index = 0;
