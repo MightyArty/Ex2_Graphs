@@ -26,4 +26,4 @@ This class represent the GUI running simulator for our algorithem.<br/>
 <br />This video shows how to load the jar file that we've made using termminal ( java -jar FILENAME.jar JSONFILENAME.json) although you can run the jar file directly from the folder / from the IDE. 
 <br /> The GUI has top menu bar with several options: FILE TAB -  loading from Json,saving to Json,determine the program.
 EDIT TAB: adding and removing nodes and edges,deleting the graph. GRAPH TAB: tsp,isconnected,shortest path,shortest path dist and center.
-
+# Algorithms Results
