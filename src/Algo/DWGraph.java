@@ -267,10 +267,14 @@ public class DWGraph implements DirectedWeightedGraph {
      * computing the map of the edges to a list
      * @return new list
      */
-    private List<EdgeData> getNewEdges(){
+    public List<EdgeData> getNewEdges(){
         List<EdgeData> list = new ArrayList<>();
         for(HashMap<Integer, EdgeData> map : newEdges.values())
             list.addAll(map.values());
         return list;
+    }
+
+    public HashMap<Integer, HashMap<Integer, EdgeData>> getNewEdgesHashMap(){
+        return newEdges;
     }
 }
