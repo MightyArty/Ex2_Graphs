@@ -201,14 +201,17 @@ public class DWGraph implements DirectedWeightedGraph {
             reversedEdges.get(eData.getDest()).remove(eData.getSrc());
             edgeSize --;
         }
+      //  reversedEdges.remove(key);
 
         while (k.hasNext()){
             EdgeData runner = k.next();
             EdgeData eData = reversedEdges.get(runner.getDest()).get(runner.getSrc());
             newEdges.get(eData.getSrc()).remove(eData.getDest());
+
             edgeSize --;
 
         }
+        newEdges.remove(key);
         this.mc ++;
         return vertex;
     }
