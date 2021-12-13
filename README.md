@@ -19,3 +19,10 @@ Represent the DirectedWeightedGraphAlgorithms functions (init,copy,isConnected,s
 - [Travelling salesman problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem)
 - [Shortest Path Problem](https://en.wikipedia.org/wiki/Shortest_path_problem)
 - [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
+# GUI class :
+This class represent the GUI running simulator for our algorithem.
+[![CLICK HERE](https://img.youtube.com/vi/rzKde6IoVKQ/mqdefault.jpg)](https://www.youtube.com/watch?v=rzKde6IoVKQ "CLICK HERE")
+<br />
+<br />In this video we can see case B5.json and Calls_d.csv.
+<br />Red full dot means new call invokes (correlated with the source floor) ,the dot becomes empty in the moment the elevator reached his destination.
+<br />The green dots works the same but for destinations, when call invokes green full dot appears in the destination floor
