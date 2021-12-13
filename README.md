@@ -27,3 +27,4 @@ This class represent the GUI running simulator for our algorithem.<br/>
 <br /> The GUI has top menu bar with several options: FILE TAB -  loading from Json,saving to Json,determine the program.
 EDIT TAB: adding and removing nodes and edges,deleting the graph. GRAPH TAB: tsp,isconnected,shortest path,shortest path dist and center.
 # Algorithms Results
+[(https://ibb.co/34L645x)]
