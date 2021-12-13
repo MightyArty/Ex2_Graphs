@@ -21,7 +21,7 @@ Represent the DirectedWeightedGraphAlgorithms functions (init,copy,isConnected,s
 - [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 # GUI class :
 This class represent the GUI running simulator for our algorithem.<br/>
-[![CLICK HERE](https://img.youtube.com/vi/rzKde6IoVKQ/mqdefault.jpg)](https://www.youtube.com/watch?v=rzKde6IoVKQ "CLICK HERE")
+[![CLICK HERE](https://img.youtube.com/vi/rzKde6IoVKQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=rzKde6IoVKQ "CLICK HERE")
 <br />
 <br />In this video we can see case B5.json and Calls_d.csv.
 <br />Red full dot means new call invokes (correlated with the source floor) ,the dot becomes empty in the moment the elevator reached his destination.
