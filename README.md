@@ -23,6 +23,6 @@ Represent the DirectedWeightedGraphAlgorithms functions (init,copy,isConnected,s
 This class represent the GUI running simulator for our algorithem.<br/>
 [![CLICK HERE](https://img.youtube.com/vi/rzKde6IoVKQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=rzKde6IoVKQ "CLICK HERE")
 <br />
-<br />In this video we can see case B5.json and Calls_d.csv.
-<br />Red full dot means new call invokes (correlated with the source floor) ,the dot becomes empty in the moment the elevator reached his destination.
+<br />This video shows how to load the jar file that we've made using termminal ( java -jar FILENAME.jar JSONFILENAME.json) although you can run the jar file directly from the folder / from the IDE. 
+<br /> The GUI has top menu bar with several options: loading from Json & saving to Json
 <br />The green dots works the same but for destinations, when call invokes green full dot appears in the destination floor
