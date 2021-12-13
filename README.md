@@ -24,5 +24,6 @@ This class represent the GUI running simulator for our algorithem.<br/>
 [![CLICK HERE](https://img.youtube.com/vi/rzKde6IoVKQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=rzKde6IoVKQ "CLICK HERE")
 <br />
 <br />This video shows how to load the jar file that we've made using termminal ( java -jar FILENAME.jar JSONFILENAME.json) although you can run the jar file directly from the folder / from the IDE. 
-<br /> The GUI has top menu bar with several options: loading from Json & saving to Json
+<br /> The GUI has top menu bar with several options: FILE TAB -  loading from Json,saving to Json,determine the program.
+EDIT TAB: adding and removing nodes and edges,deleting the graph.
 <br />The green dots works the same but for destinations, when call invokes green full dot appears in the destination floor
