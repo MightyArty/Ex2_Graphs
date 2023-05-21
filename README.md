@@ -1,5 +1,5 @@
  ![GitHub contributors](https://img.shields.io/github/contributors/MightyArty/Ex2_Graphs?style=plastic) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/MightyArty/Ex2_Graphs?style=plastic)
-# Autores: David Yosopov, Artem Shabalin and Lior Patael
+# Autores: David Yosopov, Tom Shabalin and Lior Patael
 # This is a graph algorithm in Java 
 3'd project in OOP course at Ariel Univeristy using Java. For each given Json file we'll load the data and save it in our data structure for further calculations.
 This project is mainly about directed graph, and it allows you to set and display a directed graph.
